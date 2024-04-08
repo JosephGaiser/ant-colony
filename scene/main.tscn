@@ -1,103 +1,147 @@
-[gd_scene load_steps=3 format=3 uid="uid://dd6x1alpviwwx"]
+[gd_scene load_steps=5 format=3 uid="uid://dd6x1alpviwwx"]
 
 [ext_resource type="PackedScene" uid="uid://d14pl1542hxm4" path="res://scene/ant.tscn" id="1_jnfrr"]
+[ext_resource type="PackedScene" uid="uid://bs737kq35lsyj" path="res://colony.tscn" id="2_034sc"]
 [ext_resource type="PackedScene" uid="uid://csf0y3ix7dgrt" path="res://scene/food.tscn" id="2_drsd8"]
+
+[sub_resource type="NavigationPolygon" id="NavigationPolygon_60d2m"]
+vertices = PackedVector2Array(7705, -4048, 9900, -2652, 10312, 1816, 8665, 3908, 2271, 4327, -2681, 3908, -4327, 3141, -5288, 208, -4464, -3699, 275, -4397)
+polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9)])
+outlines = Array[PackedVector2Array]([PackedVector2Array(8671.32, 3917.87, 2271.05, 4337.61, -2684, 3917.82, -4335.68, 3148.24, -5299.15, 209.86, -4473.29, -3707.97, 275.3, -4407.56, 7707.88, -4057.72, 9910.11, -2658.48, 10323, 1819.04)])
+source_geometry_group_name = &"navigation_polygon_source_group"
 
 [node name="Main" type="Node2D"]
 
 [node name="Background" type="ColorRect" parent="."]
-offset_right = 71.0
-offset_bottom = 40.0
+offset_right = 119.0
+offset_bottom = 67.0
 scale = Vector2(16.1841, 16.1841)
 color = Color(0, 0, 0, 1)
 metadata/_edit_lock_ = true
 
 [node name="Entities" type="Node" parent="."]
 
-[node name="Ant" parent="Entities" instance=ExtResource("1_jnfrr")]
-position = Vector2(232, 302)
-rotation = 1.5708
+[node name="Ant" parent="Entities" node_paths=PackedStringArray("colony_location") instance=ExtResource("1_jnfrr")]
+position = Vector2(1008, 680)
+rotation = 3.14159
 scale = Vector2(0.116245, 0.114349)
-speed = 600
+move_speed = 100
 lerp_speed = 1.0
+colony_location = NodePath("../Colony")
+defend_radius = 500.0
 
-[node name="stockpile" type="Marker2D" parent="Entities"]
-position = Vector2(576, 128)
+[node name="Ant2" parent="Entities" node_paths=PackedStringArray("colony_location") instance=ExtResource("1_jnfrr")]
+position = Vector2(392, 216)
+rotation = 3.14159
+scale = Vector2(0.116245, 0.114349)
+move_speed = 100
+lerp_speed = 1.0
+colony_location = NodePath("../Colony")
+defend_radius = 500.0
+current_state = 3
+
+[node name="Ant4" parent="Entities" node_paths=PackedStringArray("colony_location") instance=ExtResource("1_jnfrr")]
+position = Vector2(1736, 888)
+rotation = 3.14159
+scale = Vector2(0.116245, 0.114349)
+move_speed = 100
+lerp_speed = 1.0
+colony_location = NodePath("../Colony")
+defend_radius = 500.0
+current_state = 3
+
+[node name="Ant3" parent="Entities" node_paths=PackedStringArray("colony_location") instance=ExtResource("1_jnfrr")]
+position = Vector2(608, 942)
+rotation = 5.49778
+scale = Vector2(0.116245, 0.114349)
+move_speed = 100
+lerp_speed = 1.0
+colony_location = NodePath("../Colony")
+defend_radius = 500.0
+current_state = 0
+
+[node name="Colony" parent="Entities" instance=ExtResource("2_034sc")]
 
 [node name="Consumables" type="Node" parent="."]
 
 [node name="Food" parent="Consumables" instance=ExtResource("2_drsd8")]
-position = Vector2(656, 296)
+position = Vector2(256, 824)
 scale = Vector2(0.1, 0.1)
 
 [node name="Food2" parent="Consumables" instance=ExtResource("2_drsd8")]
-position = Vector2(520, 376)
+position = Vector2(190, 400)
 scale = Vector2(0.1, 0.1)
 
 [node name="Food3" parent="Consumables" instance=ExtResource("2_drsd8")]
-position = Vector2(360, 392)
+position = Vector2(238, 800)
 scale = Vector2(0.1, 0.1)
 
 [node name="Food4" parent="Consumables" instance=ExtResource("2_drsd8")]
-position = Vector2(432, 240)
+position = Vector2(232, 818)
 scale = Vector2(0.1, 0.1)
 
 [node name="Food5" parent="Consumables" instance=ExtResource("2_drsd8")]
-position = Vector2(650, 520)
+position = Vector2(266, 790)
 scale = Vector2(0.1, 0.1)
 
 [node name="Food6" parent="Consumables" instance=ExtResource("2_drsd8")]
-position = Vector2(752, 408)
+position = Vector2(760, 936)
 scale = Vector2(0.1, 0.1)
 
 [node name="Food7" parent="Consumables" instance=ExtResource("2_drsd8")]
-position = Vector2(728, 168)
+position = Vector2(928, 144)
 scale = Vector2(0.1, 0.1)
 
 [node name="Food8" parent="Consumables" instance=ExtResource("2_drsd8")]
-position = Vector2(856, 264)
+position = Vector2(184, 344)
 scale = Vector2(0.1, 0.1)
 
 [node name="Food9" parent="Consumables" instance=ExtResource("2_drsd8")]
-position = Vector2(928, 398)
+position = Vector2(864, 160)
 scale = Vector2(0.1, 0.1)
 
 [node name="Food10" parent="Consumables" instance=ExtResource("2_drsd8")]
-position = Vector2(176, 528)
+position = Vector2(232, 768)
 scale = Vector2(0.1, 0.1)
 
 [node name="Food11" parent="Consumables" instance=ExtResource("2_drsd8")]
-position = Vector2(120, 344)
+position = Vector2(712, 942)
 scale = Vector2(0.1, 0.1)
 
 [node name="Food12" parent="Consumables" instance=ExtResource("2_drsd8")]
-position = Vector2(216, 176)
+position = Vector2(752, 890)
 scale = Vector2(0.1, 0.1)
 
 [node name="Food13" parent="Consumables" instance=ExtResource("2_drsd8")]
-position = Vector2(440, 88)
+position = Vector2(736, 920)
 scale = Vector2(0.1, 0.1)
 
 [node name="Food14" parent="Consumables" instance=ExtResource("2_drsd8")]
-position = Vector2(434, 544)
+position = Vector2(168, 376)
 scale = Vector2(0.1, 0.1)
 
 [node name="Food15" parent="Consumables" instance=ExtResource("2_drsd8")]
-position = Vector2(912, 144)
+position = Vector2(922, 106)
 scale = Vector2(0.1, 0.1)
 
 [node name="Food16" parent="Consumables" instance=ExtResource("2_drsd8")]
-position = Vector2(1008, 296)
+position = Vector2(890, 144)
 scale = Vector2(0.1, 0.1)
 
 [node name="Food17" parent="Consumables" instance=ExtResource("2_drsd8")]
-position = Vector2(848, 560)
+position = Vector2(200, 368)
 scale = Vector2(0.1, 0.1)
 
 [node name="Food18" parent="Consumables" instance=ExtResource("2_drsd8")]
-position = Vector2(1016, 488)
+position = Vector2(712, 896)
 scale = Vector2(0.1, 0.1)
 
 [node name="Food19" parent="Consumables" instance=ExtResource("2_drsd8")]
-position = Vector2(1016, 488)
+position = Vector2(840, 112)
 scale = Vector2(0.1, 0.1)
+
+[node name="NavigationRegion2D" type="NavigationRegion2D" parent="."]
+position = Vector2(1264, 536)
+rotation = 3.14159
+scale = Vector2(0.116245, 0.114349)
+navigation_polygon = SubResource("NavigationPolygon_60d2m")
