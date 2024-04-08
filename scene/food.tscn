@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://csf0y3ix7dgrt"]
+
+[ext_resource type="Texture2D" uid="uid://ccjtox0pnp446" path="res://addons/kenney_input_prompts/Xbox Series/Double/xbox_button_color_x.png" id="1_vniex"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_fpn8m"]
+
+[node name="Food" type="StaticBody2D" groups=["food"]]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_vniex")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+scale = Vector2(4.89974, 4.88497)
+shape = SubResource("CircleShape2D_fpn8m")

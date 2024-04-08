@@ -1,0 +1,36 @@
+[gd_scene load_steps=5 format=3 uid="uid://d14pl1542hxm4"]
+
+[ext_resource type="Script" path="res://scene/Ant.gd" id="1_cw7ab"]
+[ext_resource type="Texture2D" uid="uid://cdwqas426siee" path="res://addons/kenney_input_prompts/Xbox Series/Double/xbox_button_color_y.png" id="2_ovjn6"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_6a7x7"]
+radius = 69.0652
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_mrwpu"]
+
+[node name="Ant" type="CharacterBody2D"]
+script = ExtResource("1_cw7ab")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_ovjn6")
+
+[node name="Reach" type="Area2D" parent="."]
+unique_name_in_owner = true
+scale = Vector2(1.14803, 1.14803)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Reach"]
+shape = SubResource("CircleShape2D_6a7x7")
+debug_color = Color(0.0901961, 0.654902, 0.462745, 0.419608)
+
+[node name="Vision" type="Area2D" parent="."]
+unique_name_in_owner = true
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Vision"]
+polygon = PackedVector2Array(452.939, -895.622, 24, 0, -24, 0, -452.458, -894.621, -384, -1088, -304, -1184, -192, -1240, -64, -1280, 64, -1280, 192, -1240, 304, -1184, 384, -1088)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+scale = Vector2(4.98848, 4.98848)
+shape = SubResource("CircleShape2D_mrwpu")
+
+[connection signal="body_entered" from="Reach" to="." method="_on_reach_body_entered"]
+[connection signal="body_entered" from="Vision" to="." method="_on_vision_body_entered"]
