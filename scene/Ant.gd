@@ -75,8 +75,13 @@ func search_for_food(delta):
 func go_to_food():
     if seen_food.is_empty():
         set_state(AntState.SEARCHING)
-    print("known food locations: ", seen_food)
-    target = seen_food[0]
+    if target == null:
+        target = seen_food[0]
+    if position.distance_to(target) < 15:
+        print("Reached target: ", target)
+        seen_food.erase(target)
+        target = null
+        set_state(AntState.SEARCHING)
 
 
 func carry_food():

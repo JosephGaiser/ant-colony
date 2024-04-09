@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://cdwqas426siee" path="res://addons/kenney_input_prompts/Xbox Series/Double/xbox_button_color_y.png" id="2_ovjn6"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_6a7x7"]
-radius = 69.0652
+radius = 90.59
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_mrwpu"]
 
@@ -40,6 +40,7 @@ unique_name_in_owner = true
 rotation = 1.57079
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Vision"]
+scale = Vector2(3.11999, 3.11999)
 polygon = PackedVector2Array(452.939, -895.622, 24, 0, -24, 0, -452.458, -894.621, -384, -1088, -304, -1184, -192, -1240, -64, -1280, 64, -1280, 192, -1240, 304, -1184, 384, -1088)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
