@@ -1,4 +1,9 @@
-class_name Ant
+[gd_scene load_steps=6 format=3 uid="uid://d14pl1542hxm4"]
+
+[ext_resource type="Texture2D" uid="uid://cdwqas426siee" path="res://addons/kenney_input_prompts/Xbox Series/Double/xbox_button_color_y.png" id="2_ovjn6"]
+
+[sub_resource type="GDScript" id="GDScript_t0vhr"]
+script/source = "class_name ant
 extends CharacterBody2D
 
 # Ant properties
@@ -30,7 +35,7 @@ var seen_food: Array            = []
 var current_angle: float        = 0.0
 var time_since_last_walk: float = 0.0
 var swarming: bool = false
-var leader: Ant
+var leader
 
 # Enum for Ant states
 enum AntState {
@@ -99,7 +104,7 @@ func go_to_food():
 	if target == null && !seen_food.is_empty():
 		target = seen_food[0]
 	if target != null && position.distance_to(target) < 15:
-		print("Reached target: ", target)
+		print(\"Reached target: \", target)
 		seen_food.erase(target)
 		target = null
 		set_state(AntState.SEARCHING)
@@ -119,13 +124,13 @@ func return_to_nest():
 			set_state(previous_state)
 		else:
 			for item in inventory:
-				print("dropping item: ", item)
+				print(\"dropping item: \", item)
 				carry_weight -= 25.00
 			inventory.clear()
 
 
 func pickup_food(body):
-	print("Picking up: ", body)
+	print(\"Picking up: \", body)
 	inventory.append(body)
 	seen_food.erase(body.global_position)
 	carry_weight += 25.00 # TODO: food.weight
@@ -134,29 +139,26 @@ func pickup_food(body):
 
 
 func see_food(body):
-	print("Saw: ", body)
+	print(\"Saw: \", body)
 	if !seen_food.has(body.global_position):
 		seen_food.append(body.global_position)
 		target = body.global_position
 		set_state(AntState.GOING_TO_FOOD)
 	else:
-		print("already aware of: ", body)
+		print(\"already aware of: \", body)
 
 
 func follow_leader() -> void:
 	if leader == null:
 		set_state(AntState.SEARCHING)
 		return
-	print("following ", leader)
 	target = leader.global_position
 	
 
 func set_state(state: AntState):
-	if current_state == AntState.FOLLOWING:
-		leader = null
 	previous_state = current_state
 	current_state = state
-	print("State change: ", AntState.find_key(previous_state), " to ", AntState.find_key(current_state))
+	print(\"State change: \", AntState.find_key(previous_state), \" to \", AntState.find_key(current_state))
 
 
 func set_leader(ant: Ant):
@@ -166,32 +168,83 @@ func set_leader(ant: Ant):
 
 
 func is_leading() -> bool:
-	print("leader check!")
+	print(\"leader check!\")
 	return leading
 
 
 func _on_reach_body_entered(body):
 	if current_state == AntState.GOING_TO_FOOD:
-		if body.is_in_group("food"):
+		if body.is_in_group(\"food\"):
 			pickup_food(body)
 
 
 func _on_vision_body_entered(body):
-	if body.is_in_group("food"):
+	if body.is_in_group(\"food\"):
 		see_food(body)
 
 
 func _on_swarm_body_entered(body):
-	if is_leading():
-		return # TODO Follow if they are a leader and have move followers
 	if swarming == true:
-		print("already swarming")
+		print(\"already swarming\")
 		return
-	if body.has_method("is_leading"):
-		if body.is_leading():
-			print("new leader! ", body)
+	if body.has_method(\"is_leading\"):
+		if body.is_leading:
+			print(\"new leader! \", body)
 			set_leader(body)
 
 
 func _on_swarm_body_exited(_body):
 	pass
+"
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_7v6id"]
+radius = 523.795
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_6a7x7"]
+radius = 97.5584
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_mrwpu"]
+
+[node name="Ant" type="CharacterBody2D" groups=["ant"]]
+position = Vector2(-8, 0)
+script = SubResource("GDScript_t0vhr")
+move_speed = 100
+lerp_speed = 1.0
+current_state = 0
+size = Vector2(0.1, 0.1)
+
+[node name="Swarm" type="Area2D" parent="."]
+unique_name_in_owner = true
+scale = Vector2(1.14803, 1.14803)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Swarm"]
+shape = SubResource("CircleShape2D_7v6id")
+debug_color = Color(0.576471, 0.494118, 0.678431, 0.419608)
+
+[node name="Reach" type="Area2D" parent="."]
+unique_name_in_owner = true
+scale = Vector2(1.14803, 1.14803)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Reach"]
+shape = SubResource("CircleShape2D_6a7x7")
+debug_color = Color(0.0901961, 0.654902, 0.462745, 0.419608)
+
+[node name="Vision" type="Area2D" parent="."]
+unique_name_in_owner = true
+rotation = 1.57079
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Vision"]
+position = Vector2(-0.00110435, 176)
+polygon = PackedVector2Array(0.00110429, -176, -447.994, -1272, 384.006, -1272)
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_ovjn6")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+scale = Vector2(4.98848, 4.98848)
+shape = SubResource("CircleShape2D_mrwpu")
+
+[connection signal="body_entered" from="Swarm" to="." method="_on_swarm_body_entered"]
+[connection signal="body_exited" from="Swarm" to="." method="_on_swarm_body_exited"]
+[connection signal="body_entered" from="Reach" to="." method="_on_reach_body_entered"]
+[connection signal="body_entered" from="Vision" to="." method="_on_vision_body_entered"]

@@ -1,27 +1,24 @@
-[gd_scene load_steps=6 format=3 uid="uid://d14pl1542hxm4"]
+[gd_scene load_steps=5 format=3 uid="uid://d14pl1542hxm4"]
 
-[ext_resource type="Script" path="res://scene/ant.gd" id="1_3yx5a"]
+[ext_resource type="Script" path="res://scene/Ant.gd" id="1_cw7ab"]
 [ext_resource type="Texture2D" uid="uid://cdwqas426siee" path="res://addons/kenney_input_prompts/Xbox Series/Double/xbox_button_color_y.png" id="2_ovjn6"]
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_7v6id"]
-radius = 341.526
-
 [sub_resource type="CircleShape2D" id="CircleShape2D_6a7x7"]
-radius = 97.5584
+radius = 90.59
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_mrwpu"]
 
 [node name="Ant" type="CharacterBody2D" groups=["ant"]]
 position = Vector2(-8, 0)
-script = ExtResource("1_3yx5a")
-
-[node name="Swarm" type="Area2D" parent="."]
-unique_name_in_owner = true
-scale = Vector2(1.14803, 1.14803)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Swarm"]
-shape = SubResource("CircleShape2D_7v6id")
-debug_color = Color(0.576471, 0.494118, 0.678431, 0.419608)
+script = ExtResource("1_cw7ab")
+move_speed = null
+lerp_speed = null
+rotation_speed = null
+carry_capacity = null
+defend_radius = null
+current_state = null
+random_walk_distance = null
+random_walk_delay = null
 
 [node name="Reach" type="Area2D" parent="."]
 unique_name_in_owner = true
@@ -36,8 +33,9 @@ unique_name_in_owner = true
 rotation = 1.57079
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Vision"]
-position = Vector2(-0.00110435, 176)
-polygon = PackedVector2Array(0.00110429, -176, -447.994, -1272, 384.006, -1272)
+position = Vector2(-1.38778e-17, 1.81899e-12)
+scale = Vector2(3.11999, 5.30878)
+polygon = PackedVector2Array(452.939, -895.622, 24, 0, -24, 0, -452.458, -894.621)
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("2_ovjn6")
@@ -46,7 +44,5 @@ texture = ExtResource("2_ovjn6")
 scale = Vector2(4.98848, 4.98848)
 shape = SubResource("CircleShape2D_mrwpu")
 
-[connection signal="body_entered" from="Swarm" to="." method="_on_swarm_body_entered"]
-[connection signal="body_exited" from="Swarm" to="." method="_on_swarm_body_exited"]
 [connection signal="body_entered" from="Reach" to="." method="_on_reach_body_entered"]
 [connection signal="body_entered" from="Vision" to="." method="_on_vision_body_entered"]

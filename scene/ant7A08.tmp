@@ -1,0 +1,61 @@
+[gd_scene load_steps=10 format=3 uid="uid://d14pl1542hxm4"]
+
+[ext_resource type="Script" path="res://scene/ant.gd" id="1_b6wfg"]
+[ext_resource type="Texture2D" uid="uid://cdwqas426siee" path="res://addons/kenney_input_prompts/Xbox Series/Double/xbox_button_color_y.png" id="2_ovjn6"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_6a7x7"]
+radius = 90.59
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_mrwpu"]
+
+[sub_resource type="BlackboardPlan" id="BlackboardPlan_hq24y"]
+
+[sub_resource type="BTSequence" id="BTSequence_4wuo7"]
+
+[sub_resource type="BTSelector" id="BTSelector_a2mrp"]
+children = [SubResource("BTSequence_4wuo7")]
+
+[sub_resource type="BehaviorTree" id="BehaviorTree_xrumo"]
+blackboard_plan = SubResource("BlackboardPlan_hq24y")
+root_task = SubResource("BTSelector_a2mrp")
+
+[sub_resource type="BlackboardPlan" id="BlackboardPlan_magx7"]
+
+[node name="Node2D" type="Node2D"]
+script = ExtResource("1_b6wfg")
+
+[node name="Ant" type="CharacterBody2D" parent="." groups=["ant"]]
+position = Vector2(-8, 0)
+
+[node name="Sprite2D" type="Sprite2D" parent="Ant"]
+texture = ExtResource("2_ovjn6")
+
+[node name="Reach" type="Area2D" parent="Ant"]
+unique_name_in_owner = true
+scale = Vector2(1.14803, 1.14803)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ant/Reach"]
+shape = SubResource("CircleShape2D_6a7x7")
+debug_color = Color(0.0901961, 0.654902, 0.462745, 0.419608)
+
+[node name="Vision" type="Area2D" parent="Ant"]
+unique_name_in_owner = true
+rotation = 1.57079
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Ant/Vision"]
+position = Vector2(-1.38778e-17, 1.81899e-12)
+scale = Vector2(3.11999, 5.30878)
+polygon = PackedVector2Array(452.939, -895.622, 24, 0, -24, 0, -452.458, -894.621)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ant"]
+scale = Vector2(4.98848, 4.98848)
+shape = SubResource("CircleShape2D_mrwpu")
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="Ant"]
+
+[node name="BTPlayer" type="BTPlayer" parent="Ant"]
+behavior_tree = SubResource("BehaviorTree_xrumo")
+blackboard_plan = SubResource("BlackboardPlan_magx7")
+
+[connection signal="body_entered" from="Ant/Reach" to="Ant" method="_on_reach_body_entered"]
+[connection signal="body_entered" from="Ant/Vision" to="Ant" method="_on_vision_body_entered"]
