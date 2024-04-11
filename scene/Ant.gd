@@ -11,7 +11,6 @@ extends CharacterBody2D
 @export var current_state: AntState = AntState.DEFENDING_NEST
 @export var size: Vector2 = Vector2(0.2, 0.2)
 @export var leading: bool = false
-
 # Random walk variables
 @export var random_walk_distance: float = 100.0
 @export var random_walk_delay: float = 1.0
@@ -20,6 +19,9 @@ extends CharacterBody2D
 @onready var reach: Area2D = %Reach
 @onready var vision: Area2D = %Vision
 @onready var swarm: Area2D = %Swarm
+@onready var details: VBoxContainer = %Details
+@onready var ui: PanelContainer = %UI
+@onready var colony = %Colony
 
 # Internal variables
 var target
@@ -29,40 +31,93 @@ var inventory: Array            = []
 var seen_food: Array            = []
 var current_angle: float        = 0.0
 var time_since_last_walk: float = 0.0
-var swarming: bool = false
-var leader: Ant
-
+var swarming: bool              = false
+var leader: Ant                 = null
+var ant_in_front: Ant           = null
+var followers: Array            = []
 # Enum for Ant states
 enum AntState {
 	SEARCHING,
-	GOING_TO_FOOD,
+	GOING_TO_TARGET,
 	CARRYING_FOOD,
 	RETURNING_TO_NEST,
 	DEFENDING_NEST,
 	FOLLOWING,
+	IDLE,
 }
 
+
 func _ready():
+	colony_location = colony
 	scale = size
+	details.add_child(state_label)
+	details.add_child(target_label)
+	details.add_child(inventory_label)
+	details.add_child(followers_label)
+	details.add_child(leader_label)
+	details.add_child(ant_in_front_label)
+	details.add_child(distance_to_target)
+
+var state_label: Label        = Label.new()
+var target_label: Label       = Label.new()
+var inventory_label: Label    = Label.new()
+var leader_label: Label       = Label.new()
+var followers_label: Label    = Label.new()
+var ant_in_front_label: Label = Label.new()
+var distance_to_target: Label = Label.new()
+
+func update_detailed_view() -> void:
+	ui.position = position + Vector2(50, 50)
+	if details.visible == false:
+		return
+	state_label.text = "State: " + AntState.find_key(current_state)
+	target_label.text = "Target: " + str(target)
+	inventory_label.text = "Inventory: " + str(inventory)
+	followers_label.text = "Followers: " + str(followers)
+	leader_label.text = "Leader: " + str(leader)
+	ant_in_front_label.text = "Ant in front: " + str(ant_in_front)
+	if target != null:
+		distance_to_target.text = "Distance to target: " + str(position.distance_to(target))
+		target_label.visible = true
+	else:
+		target_label.visible = false
+	if inventory.is_empty():
+		inventory_label.visible = false
+	else:
+		inventory_label.visible = true
+	if followers.is_empty():
+		followers_label.visible = false
+	else:
+		followers_label.visible = true
+	if leader == null:
+		leader_label.visible = false
+	else:
+		leader_label.visible = true
+	if ant_in_front == null:
+		ant_in_front_label.visible = false
+	else:
+		ant_in_front_label.visible = true
+
 
 func _physics_process(delta):
+	update_detailed_view()
 	time_since_last_walk += delta
-
 	match current_state:
 		AntState.DEFENDING_NEST:
 			defend_nest(delta)
 		AntState.SEARCHING:
 			search_for_food(delta)
-		AntState.GOING_TO_FOOD:
-			go_to_food()
+		AntState.GOING_TO_TARGET:
+			go_to_target()
 		AntState.CARRYING_FOOD:
 			carry_food()
 		AntState.RETURNING_TO_NEST:
 			return_to_nest()
 		AntState.FOLLOWING:
 			follow_leader()
-		_:
+		AntState.IDLE:
 			pass
+
 	if velocity != Vector2.ZERO:
 		rotation = lerp(rotation, velocity.angle(), lerp_speed)
 	if target != null:
@@ -90,19 +145,16 @@ func search_for_food(_delta):
 			target = position + Vector2(cos(angle), sin(angle)) * random_walk_distance
 			time_since_last_walk = 0.0
 	else:
-		set_state(AntState.GOING_TO_FOOD)
-
-
-func go_to_food():
-	if seen_food.is_empty():
-		set_state(AntState.SEARCHING)
-	if target == null && !seen_food.is_empty():
 		target = seen_food[0]
-	if target != null && position.distance_to(target) < 15:
+		set_state(AntState.GOING_TO_TARGET)
+
+func go_to_target() -> void:
+	if target == null:
+		set_state(AntState.SEARCHING)
+	if position.distance_to(target) < 20:
 		print("Reached target: ", target)
 		seen_food.erase(target)
 		target = null
-		set_state(AntState.SEARCHING)
 
 
 func carry_food():
@@ -112,7 +164,10 @@ func carry_food():
 		set_state(AntState.SEARCHING)
 
 
-func return_to_nest():
+func return_to_nest() -> void:
+	if colony_location == null:
+		set_state(AntState.IDLE)
+		return
 	target = colony_location.global_position
 	if position.distance_to(target) < 75:
 		if inventory.is_empty():
@@ -138,42 +193,71 @@ func see_food(body):
 	if !seen_food.has(body.global_position):
 		seen_food.append(body.global_position)
 		target = body.global_position
-		set_state(AntState.GOING_TO_FOOD)
-	else:
-		print("already aware of: ", body)
+		set_state(AntState.GOING_TO_TARGET)
 
 
 func follow_leader() -> void:
 	if leader == null:
+		print("Lost leader!")
 		set_state(AntState.SEARCHING)
 		return
-	print("following ", leader)
-	target = leader.global_position
-	
+	if ant_in_front == null:
+		print("Lost ant in front!")
+		set_state(AntState.SEARCHING)
+		return
+	target = ant_in_front.global_position
 
-func set_state(state: AntState):
+
+func set_state(state: AntState) -> void:
+	if state == current_state:
+		return
 	if current_state == AntState.FOLLOWING:
-		leader = null
+		stop_following()
 	previous_state = current_state
 	current_state = state
 	print("State change: ", AntState.find_key(previous_state), " to ", AntState.find_key(current_state))
 
 
-func set_leader(ant: Ant):
+func stop_following():
+	leader.remove_follower(self)
+	leader = null # Stop following the leader
+	swarming = false
+
+
+func get_ant_to_follow() -> Ant:
+	if followers.is_empty():
+		print("IM THE LEADER!")
+		return self # If we have no followers, we are the ant to follow
+	print(followers.back(), "is the ant_in_front")
+	return followers.back()  # Return the last follower in the list
+
+
+func set_leader(new_leader: Ant) -> void:
+	print("new leader! ", new_leader)
 	swarming = true
-	leader = ant
+	leader = new_leader
+	ant_in_front = leader.get_ant_to_follow()
+	leader.add_follower(self)
 	set_state(AntState.FOLLOWING)
 
 
 func is_leading() -> bool:
-	print("leader check!")
 	return leading
 
 
+func add_follower(follower: Ant) -> void:
+	followers.append(follower)
+	print("Added follower: ", follower)
+
+
+func remove_follower(follower: Ant) -> void:
+	followers.erase(follower)
+	print("Removed follower: ", follower)
+
+
 func _on_reach_body_entered(body):
-	if current_state == AntState.GOING_TO_FOOD:
-		if body.is_in_group("food"):
-			pickup_food(body)
+	if body.is_in_group("food"):
+		pickup_food(body)
 
 
 func _on_vision_body_entered(body):
@@ -181,15 +265,13 @@ func _on_vision_body_entered(body):
 		see_food(body)
 
 
-func _on_swarm_body_entered(body):
+func _on_swarm_body_entered(body) -> void:
 	if is_leading():
 		return # TODO Follow if they are a leader and have move followers
 	if swarming == true:
-		print("already swarming")
 		return
 	if body.has_method("is_leading"):
-		if body.is_leading():
-			print("new leader! ", body)
+		if leader == null && body.is_leading():
 			set_leader(body)
 
 
