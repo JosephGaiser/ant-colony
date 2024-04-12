@@ -1,0 +1,85 @@
+[gd_scene load_steps=7 format=3 uid="uid://d14pl1542hxm4"]
+
+[ext_resource type="Script" path="res://scene/ant.gd" id="1_3yx5a"]
+[ext_resource type="Texture2D" uid="uid://cdwqas426siee" path="res://addons/kenney_input_prompts/Xbox Series/Double/xbox_button_color_y.png" id="2_ovjn6"]
+
+[sub_resource type="Theme" id="Theme_0aii6"]
+default_font_size = 15
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_7v6id"]
+radius = 341.526
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_6a7x7"]
+radius = 97.5584
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_mrwpu"]
+
+[node name="Ant" type="Node2D"]
+script = ExtResource("1_3yx5a")
+move_speed = null
+lerp_speed = null
+rotation_speed = null
+carry_capacity = null
+defend_radius = null
+current_state = null
+size = null
+leading = null
+random_walk_distance = null
+random_walk_delay = null
+
+[node name="UI" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+offset_right = 99.0
+offset_bottom = 22.0
+theme = SubResource("Theme_0aii6")
+
+[node name="Details" type="VBoxContainer" parent="UI"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Body" type="CharacterBody2D" parent="." groups=["ant"]]
+unique_name_in_owner = true
+metadata/_edit_lock_ = true
+
+[node name="Swarm" type="Area2D" parent="Body"]
+unique_name_in_owner = true
+scale = Vector2(1.14803, 1.14803)
+metadata/_edit_lock_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Body/Swarm"]
+shape = SubResource("CircleShape2D_7v6id")
+debug_color = Color(0.576471, 0.494118, 0.678431, 0.419608)
+metadata/_edit_lock_ = true
+
+[node name="Reach" type="Area2D" parent="Body"]
+unique_name_in_owner = true
+scale = Vector2(1.14803, 1.14803)
+metadata/_edit_lock_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Body/Reach"]
+shape = SubResource("CircleShape2D_6a7x7")
+debug_color = Color(0.0901961, 0.654902, 0.462745, 0.419608)
+metadata/_edit_lock_ = true
+
+[node name="Vision" type="Area2D" parent="Body"]
+unique_name_in_owner = true
+rotation = 1.57079
+metadata/_edit_lock_ = true
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Body/Vision"]
+polygon = PackedVector2Array(0, 0, -447.996, -640.003, -295.994, -896.002, -7.26733, -896, 296.006, -895.998, 448.004, -639.997)
+metadata/_edit_lock_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="Body"]
+texture = ExtResource("2_ovjn6")
+metadata/_edit_lock_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Body"]
+scale = Vector2(4.98848, 4.98848)
+shape = SubResource("CircleShape2D_mrwpu")
+metadata/_edit_lock_ = true
+
+[connection signal="body_entered" from="Body/Swarm" to="Body" method="_on_swarm_body_entered"]
+[connection signal="body_exited" from="Body/Swarm" to="Body" method="_on_swarm_body_exited"]
+[connection signal="body_entered" from="Body/Reach" to="Body" method="_on_reach_body_entered"]
+[connection signal="body_entered" from="Body/Vision" to="Body" method="_on_vision_body_entered"]

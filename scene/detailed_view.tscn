@@ -1,0 +1,19 @@
+[gd_scene load_steps=2 format=3 uid="uid://w4xxbxn7iwb2"]
+
+[ext_resource type="Script" path="res://scene/detailed_view.gd" id="1_hhgav"]
+
+[node name="DetailedView" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_hhgav")
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Details" type="VBoxContainer" parent="PanelContainer"]
+unique_name_in_owner = true
+layout_mode = 2
