@@ -12,8 +12,8 @@ extends CharacterBody2D
 # Random walk variables
 @export var random_walk_distance: float = 500.00
 #Nav variables
-@export var path_desired_distance: float = 12 # How close must be to target location to consider "reached"
-@export var target_desired_distance: float = 50 # How far from target location can be before recalc path
+@export var path_desired_distance: float = 20 # How close must be to target location to consider "reached"
+@export var target_desired_distance: float = 50 # How far from target location csan be before recalc path
 
 # References to other nodes
 @onready var navigation_agent: NavigationAgent2D = %NavigationAgent2D
@@ -125,6 +125,10 @@ func random_walk():
 
 
 func go_to_target() -> void:
+	if global_position.distance_to(movement_target_position) < 20:
+		print("target should be here")
+		known_food_locations.erase(movement_target_position)
+		set_state(AntState.SEARCHING)
 	if !known_food_locations.is_empty(): # If we know about possible food locations, go to it
 		var closest_food: Vector2 = known_food_locations[0]
 		for food_position in known_food_locations:
@@ -136,9 +140,6 @@ func go_to_target() -> void:
 		print("cant reach target")
 		known_food_locations.erase(movement_target_position)
 		set_state(AntState.SEARCHING)
-		return
-	if navigation_agent.is_navigation_finished():
-		set_state(AntState.SEARCHING) # If we reached the target, start searching again
 		return
 
 
@@ -156,6 +157,7 @@ func return_to_nest() -> void:
 	set_movement_target(colony_location.global_position)
 	if navigation_agent.is_navigation_finished():
 		inventory.clear() #TODO drop food
+		carry_weight = 0.00
 		set_state(AntState.SEARCHING)
 
 
@@ -186,10 +188,9 @@ func see_food(body):
 
 # Signals
 func _on_reach_body_entered(body) -> void:
-	if carry_weight >= carry_capacity:
-		set_state(AntState.RETURNING_TO_NEST)
-		return
 	if body.is_in_group("food"):
+		if carry_weight >= carry_capacity:
+			return
 		pickup_food(body)
 
 

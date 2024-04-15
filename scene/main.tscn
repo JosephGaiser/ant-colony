@@ -94,13 +94,33 @@ offset_bottom = 592.0
 parent = NodePath("../Body2")
 
 [node name="Body" parent="Entities" node_paths=PackedStringArray("colony_location") instance=ExtResource("1_jnfrr")]
-position = Vector2(472, 624)
+position = Vector2(128, 592)
+rotation = 1.57079
 colony_location = NodePath("../../Colony")
 
 [node name="Body2" parent="Entities" node_paths=PackedStringArray("colony_location") instance=ExtResource("1_jnfrr")]
+position = Vector2(-7.99998, 712)
+colony_location = NodePath("../../Colony")
+
+[node name="Body3" parent="Entities" node_paths=PackedStringArray("colony_location") instance=ExtResource("1_jnfrr")]
 position = Vector2(1400, 648)
 colony_location = NodePath("../../Colony")
-lerp_speed = 0.2
+
+[node name="Body4" parent="Entities" node_paths=PackedStringArray("colony_location") instance=ExtResource("1_jnfrr")]
+position = Vector2(1400, 648)
+colony_location = NodePath("../../Colony")
+
+[node name="Body5" parent="Entities" node_paths=PackedStringArray("colony_location") instance=ExtResource("1_jnfrr")]
+position = Vector2(1400, 648)
+colony_location = NodePath("../../Colony")
+
+[node name="Body6" parent="Entities" node_paths=PackedStringArray("colony_location") instance=ExtResource("1_jnfrr")]
+position = Vector2(1400, 648)
+colony_location = NodePath("../../Colony")
+
+[node name="Body7" parent="Entities" node_paths=PackedStringArray("colony_location") instance=ExtResource("1_jnfrr")]
+position = Vector2(1400, 648)
+colony_location = NodePath("../../Colony")
 
 [node name="Consumables" type="Node2D" parent="."]
 

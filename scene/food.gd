@@ -4,12 +4,11 @@ extends RigidBody2D
 @export var value: int = 1
 @export var weight: float = 1.0
 
-@onready var sprite_2d: Sprite2D = %Sprite2D
 @onready var coll: CollisionShape2D = %CollisionShape2D
 
 
 func _ready():
-	mass = weight / 10
+	mass = weight
 
 func pickup():
 	print("I was picked up", self)
@@ -18,8 +17,6 @@ func pickup():
 
 func drop(position: Vector2):
 	print("I was dropped", self)
-	# TODO FIX
-	queue_free()
 
 
 func get_weight() -> float:
