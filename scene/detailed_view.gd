@@ -5,6 +5,12 @@ extends Control
 @onready var details: VBoxContainer = %Details
 
 
+func _ready():
+	if parent == null:
+		if get_parent() != null:
+			if get_parent().has_method("get_details"):
+				parent = get_parent()
+
 func _process(delta: float) -> void:
 	position = parent.global_position + Vector2(12,12)
 	var props: Array[Dictionary] = parent.get_details()

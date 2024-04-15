@@ -4,35 +4,26 @@ extends CharacterBody2D
 # Ant properties
 @export var colony_location: Marker2D
 @export var current_state: AntState = AntState.SEARCHING
-@export var move_speed: float = 50
-@export var lerp_speed: float = 0.1
-@export var max_velocity: float = 10.0
-@export var rotation_speed: float = 2 * PI / 5  # 5 seconds to complete a full circle
-@export var carry_capacity: float = 100.00
-@export var defend_radius: float = 100.0
-@export var leading: bool = false
+@export var previous_state: AntState = AntState.IDLE
+@export var move_speed: float = 100.0
+@export var lerp_speed: float = 0.2
+@export var carry_capacity: float = 1.0
+@export var is_leader: bool = false
 # Random walk variables
-@export var random_walk_distance: float = 100.0
-@export var random_walk_delay: float = 1.0
+@export var random_walk_distance: float = 500.00
+#Nav variables
+@export var path_desired_distance: float = 12 # How close must be to target location to consider "reached"
+@export var target_desired_distance: float = 50 # How far from target location can be before recalc path
 
 # References to other nodes
-@onready var reach: Area2D = %Reach
-@onready var vision: Area2D = %Vision
-@onready var swarm: Area2D = %Swarm
-@onready var colony = %Colony
+@onready var navigation_agent: NavigationAgent2D = %NavigationAgent2D
 
 # Internal variables
-var target
-var carry_weight: float         = 0.00
-var previous_state: AntState    = current_state
-var inventory: Array            = []
-var seen_food: Array            = []
-var current_angle: float        = 0.0
-var time_since_last_walk: float = 0.0
-var swarming: bool              = false
-var leader: Ant                 = null
-var ant_in_front: Ant           = null
-var followers: Array            = []
+var movement_target_position: Vector2 = Vector2(0.0, 0.0)
+var carry_weight: float               = 0.0
+var current_angle: float              = 0.0
+var inventory: Array[Food]               = []
+var known_food_locations: Array[Vector2] = []
 # Enum for Ant states
 enum AntState {
 	SEARCHING,
@@ -40,32 +31,34 @@ enum AntState {
 	CARRYING_FOOD,
 	RETURNING_TO_NEST,
 	DEFENDING_NEST,
-	FOLLOWING,
 	IDLE,
 }
 
 
-func get_details() -> Array[Dictionary]:
-	return [
-		{"name": "Current State", "value": AntState.find_key(current_state)},
-		{"name": "Target", "value": str(target)},
-		{"name": "Position", "value": str(global_position)},
-		{"name": "Velocity", "value": str(velocity)},
-		{"name": "Rotation", "value": str(rotation)},
-		{"name": "Carry Weight", "value": str(carry_weight)},
-		{"name": "Carry Capacity", "value": str(carry_capacity)},
-		{"name": "Inventory", "value": str(inventory.size())},
-		{"name": "Seen Food", "value": str(seen_food.size())},
-		{"name": "Leading", "value": str(leading)},
-		{"name": "Swarming", "value": str(swarming)},
-		{"name": "Followers", "value": str(followers.size())},
-		{"name": "Leader", "value": str(leader)},
-		{"name": "Ant in Front", "value": str(ant_in_front)},
-	]
+func _ready():
+	# These values need to be adjusted for the actor's speed
+	# and the navigation layout.
+	navigation_agent.path_desired_distance = path_desired_distance
+	navigation_agent.target_desired_distance = target_desired_distance
+	navigation_agent.avoidance_enabled = true
+
+	# Make sure to not await during _ready.
+	call_deferred("actor_setup")
 
 
-func _physics_process(delta):
-	time_since_last_walk += delta
+func actor_setup():
+	# Wait for the first physics frame so the NavigationServer can sync.
+	await get_tree().physics_frame
+	# Now that the navigation map is no longer empty, set the movement target to the current position.
+	set_movement_target(global_position)
+
+
+func set_movement_target(movement_target: Vector2):
+	movement_target_position = movement_target
+	navigation_agent.target_position = movement_target
+
+
+func _physics_process(delta) -> void:
 	match current_state:
 		AntState.DEFENDING_NEST:
 			defend_nest(delta)
@@ -77,54 +70,76 @@ func _physics_process(delta):
 			carry_food()
 		AntState.RETURNING_TO_NEST:
 			return_to_nest()
-		AntState.FOLLOWING:
-			follow_leader()
 		AntState.IDLE:
 			pass
 
-	if velocity != Vector2.ZERO: # Currently Moveing
-		set_rotation(lerp(rotation, velocity.angle(), lerp_speed))
-	if target != null:
-		var direction = (target - global_position).normalized()
-		velocity = direction * move_speed
-	if move_and_slide():
-		# If we hit something while moving, stop moving
-		velocity = Vector2.ZERO
-		# if we are searching for food and we hit a wall, change direction
-		if current_state == AntState.SEARCHING:
-			current_angle += PI
-			current_angle = fmod(current_angle, 2 * PI)  # Keep the angle between 0 and 2*PI
+	if navigation_agent.is_navigation_finished():
+		return
+	var next_path_position: Vector2 = navigation_agent.get_next_path_position()
+	var direction_to_move: Vector2  = global_position.direction_to(next_path_position)
+	#    var new_velocity: Vector2  = lerp(velocity, direction_to_move * move_speed, lerp_speed)
+	var new_velocity: Vector2 = direction_to_move * move_speed
+	rotation = lerp(rotation, direction_to_move.angle(), lerp_speed)
+	if navigation_agent.avoidance_enabled:
+		# Avoidance is enabled, so we need to set the velocity through the navigation agent.
+		navigation_agent.set_velocity(new_velocity)
+	else:
+		# Avoidance is disabled, so we can set the velocity directly.
+		_on_navigation_agent_2d_velocity_computed(new_velocity)
 
-func defend_nest(delta):
+
+# State logic
+func set_state(state: AntState) -> void:
+	if state == current_state:
+		return # Don't change state if it's the same
+	previous_state = current_state
+	current_state = state
+	print("State change: ", AntState.find_key(previous_state), " to ", AntState.find_key(current_state))
+
+
+func defend_nest(delta) -> void:
 	if colony_location == null:
 		set_state(AntState.SEARCHING)
-	else:
-		current_angle += rotation_speed * delta
-		current_angle = fmod(current_angle, 2 * PI)  # Keep the angle between 0 and 2*PI
-		target = colony_location.global_position + Vector2(cos(current_angle), sin(current_angle)) * defend_radius
-		var direction = (target - position).normalized()
-		velocity = direction * move_speed
+		return	
+	if movement_target_position == colony_location.global_position:
+		return # Don't change target if we're already there
+	set_movement_target(colony_location.global_position)
 
 
-func search_for_food(_delta):
-	if seen_food.is_empty():
-		if time_since_last_walk >= random_walk_delay:
-			# Pick an angle between 90 degrees from the current angle so we don't walk back on ourselves
-			var angle: float = current_angle + (PI / 2) + randf_range(-PI / 4, PI / 4)
-			target = position + Vector2(cos(angle), sin(angle)) * random_walk_distance
-			time_since_last_walk = 0.0
-	else:
-		target = seen_food[0]
+func search_for_food(_delta) -> void:
+	if !known_food_locations.is_empty(): # If we know about possible food locations, go to it
 		set_state(AntState.GOING_TO_TARGET)
+		return
+	if navigation_agent.is_navigation_finished():
+		print("Walking")
+		random_walk()
+
+
+func random_walk():
+	var angle_range: float      = 45.0
+	var distance_range: Vector2 = Vector2(100.00, random_walk_distance)
+	current_angle += randf_range(-angle_range, angle_range)
+	var distance: float         = randf_range(distance_range.x, distance_range.y)
+	var target = global_position + Vector2(cos(current_angle), sin(current_angle)) * distance
+	set_movement_target(target)
 
 
 func go_to_target() -> void:
-	if target == null:
+	if !known_food_locations.is_empty(): # If we know about possible food locations, go to it
+		var closest_food: Vector2 = known_food_locations[0]
+		for food_position in known_food_locations:
+			if global_position.distance_to(food_position) < global_position.distance_to(closest_food):
+				closest_food = food_position
+		set_movement_target(closest_food)
+		return
+	if !navigation_agent.is_target_reachable(): # If we can't reach the target, remove it from the list
+		print("cant reach target")
+		known_food_locations.erase(movement_target_position)
 		set_state(AntState.SEARCHING)
-	if target != null && position.distance_to(target) < 20:
-		print("Reached target: ", target)
-		seen_food.erase(target)
-		target = null
+		return
+	if navigation_agent.is_navigation_finished():
+		set_state(AntState.SEARCHING) # If we reached the target, start searching again
+		return
 
 
 func carry_food():
@@ -138,95 +153,42 @@ func return_to_nest() -> void:
 	if colony_location == null:
 		set_state(AntState.IDLE)
 		return
-	target = colony_location.global_position
-	if position.distance_to(target) < 75:
-		if inventory.is_empty():
-			set_state(previous_state)
-		else:
-			for item in inventory:
-				print("dropping item: ", item)
-				carry_weight -= 25.00
-			inventory.clear()
+	set_movement_target(colony_location.global_position)
+	if navigation_agent.is_navigation_finished():
+		inventory.clear() #TODO drop food
+		set_state(AntState.SEARCHING)
 
 
-func pickup_food(body):
-	print("Picking up: ", body)
-	inventory.append(body)
-	seen_food.erase(body.global_position)
-	carry_weight += 25.00 # TODO: food.weight
-	body.queue_free()
+# Food logic
+func pickup_food(food: Food) -> void:
+	print("Picking up: ", food)
+	inventory.append(food)
+	known_food_locations.erase(food.global_position)
+	food.pickup()
+	carry_weight += food.get_weight()
 	set_state(AntState.CARRYING_FOOD)
 
 
+func drop_food(food: Food) -> void:
+	print("Dropping: ", food)
+	inventory.erase(food)
+	carry_weight -= food.get_weight()
+	food.drop(global_position)
+	if known_food_locations.has(food.global_position):
+		known_food_locations.erase(food.global_position)
+
+
 func see_food(body):
-	print("Saw: ", body)
-	if !seen_food.has(body.global_position):
-		seen_food.append(body.global_position)
-		target = body.global_position
-		set_state(AntState.GOING_TO_TARGET)
+	print("Saw: ", body, " at ", body.global_position)
+	if !known_food_locations.has(body.global_position):
+		known_food_locations.append(body.global_position)
 
 
-func follow_leader() -> void:
-	if leader == null:
-		print("Lost leader!")
-		set_state(AntState.SEARCHING)
+# Signals
+func _on_reach_body_entered(body) -> void:
+	if carry_weight >= carry_capacity:
+		set_state(AntState.RETURNING_TO_NEST)
 		return
-	if ant_in_front == null:
-		print("Lost ant in front!")
-		set_state(AntState.SEARCHING)
-		return
-	# target behind the ant in front
-	target = ant_in_front.global_position - (ant_in_front.velocity.normalized() * 50)
-
-
-func set_state(state: AntState) -> void:
-	if state == current_state:
-		return
-	if current_state == AntState.FOLLOWING:
-		stop_following()
-	previous_state = current_state
-	current_state = state
-	print("State change: ", AntState.find_key(previous_state), " to ", AntState.find_key(current_state))
-
-
-func stop_following():
-	leader.remove_follower(self)
-	leader = null # Stop following the leader
-	swarming = false
-
-
-func get_ant_to_follow() -> Ant:
-	if followers.is_empty():
-		print("IM THE LEADER!")
-		return self # If we have no followers, we are the ant to follow
-	print(followers.back(), "is the ant_in_front")
-	return followers.back()  # Return the last follower in the list
-
-
-func set_leader(new_leader: Ant) -> void:
-	print("new leader! ", new_leader)
-	swarming = true
-	leader = new_leader
-	ant_in_front = leader.get_ant_to_follow()
-	leader.add_follower(self)
-	set_state(AntState.FOLLOWING)
-
-
-func is_leading() -> bool:
-	return leading
-
-
-func add_follower(follower: Ant) -> void:
-	followers.append(follower)
-	print("Added follower: ", follower)
-
-
-func remove_follower(follower: Ant) -> void:
-	followers.erase(follower)
-	print("Removed follower: ", follower)
-
-
-func _on_reach_body_entered(body):
 	if body.is_in_group("food"):
 		pickup_food(body)
 
@@ -236,12 +198,20 @@ func _on_vision_body_entered(body):
 		see_food(body)
 
 
-func _on_swarm_body_entered(body) -> void:
-	if is_leading():
-		return # TODO Follow if they are a leader and have move followers
-	if swarming == true:
-		return
-	if body.has_method("is_leading"):
-		print("possible new leader ", body)
-		if leader == null && body.is_leading():
-			set_leader(body)
+func _on_navigation_agent_2d_velocity_computed(safe_velocity):
+	velocity = safe_velocity
+	move_and_slide()
+
+
+# Used for detailed information about the ant in the UI
+func get_details() -> Array[Dictionary]:
+	return [
+		{"name": "Current State", "value": AntState.find_key(current_state)},
+		{"name": "Position", "value": str(global_position)},
+		{"name": "Velocity", "value": str(velocity)},
+		{"name": "Rotation", "value": str(rotation)},
+		{"name": "Carry Weight", "value": str(carry_weight)},
+		{"name": "Inventory", "value": str(inventory)},
+		{"name": "Seen Food", "value": str(known_food_locations)},
+		{"name": "Random Walk Distance", "value": str(random_walk_distance)},
+	]
