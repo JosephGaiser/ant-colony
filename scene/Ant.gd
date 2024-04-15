@@ -111,7 +111,6 @@ func search_for_food(_delta) -> void:
 		set_state(AntState.GOING_TO_TARGET)
 		return
 	if navigation_agent.is_navigation_finished():
-		print("Walking")
 		random_walk()
 
 
@@ -156,8 +155,8 @@ func return_to_nest() -> void:
 		return
 	set_movement_target(colony_location.global_position)
 	if navigation_agent.is_navigation_finished():
-		inventory.clear() #TODO drop food
-		carry_weight = 0.00
+		for item in inventory:
+			drop_food(item) #TODO not safe, need to verify type
 		set_state(AntState.SEARCHING)
 
 
@@ -166,18 +165,17 @@ func pickup_food(food: Food) -> void:
 	print("Picking up: ", food)
 	inventory.append(food)
 	known_food_locations.erase(food.global_position)
-	food.pickup()
+	food.pickup(self)
 	carry_weight += food.get_weight()
 	set_state(AntState.CARRYING_FOOD)
 
 
 func drop_food(food: Food) -> void:
 	print("Dropping: ", food)
+	food.drop()
 	inventory.erase(food)
 	carry_weight -= food.get_weight()
-	food.drop(global_position)
-	if known_food_locations.has(food.global_position):
-		known_food_locations.erase(food.global_position)
+	known_food_locations.erase(food.global_position)
 
 
 func see_food(body):
@@ -194,9 +192,13 @@ func _on_reach_body_entered(body) -> void:
 		pickup_food(body)
 
 
-func _on_vision_body_entered(body):
+func _on_vision_body_entered(body) -> void:
 	if body.is_in_group("food"):
-		see_food(body)
+		var food = body as Food
+		if food.is_collected():
+			print("Ignoring food")
+			return # no action needed
+		see_food(food)
 
 
 func _on_navigation_agent_2d_velocity_computed(safe_velocity):

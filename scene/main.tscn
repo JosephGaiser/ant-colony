@@ -99,146 +99,305 @@ rotation = 1.57079
 colony_location = NodePath("../../Colony")
 
 [node name="Body2" parent="Entities" node_paths=PackedStringArray("colony_location") instance=ExtResource("1_jnfrr")]
-position = Vector2(-7.99998, 712)
-colony_location = NodePath("../../Colony")
-
-[node name="Body3" parent="Entities" node_paths=PackedStringArray("colony_location") instance=ExtResource("1_jnfrr")]
-position = Vector2(1400, 648)
-colony_location = NodePath("../../Colony")
-
-[node name="Body4" parent="Entities" node_paths=PackedStringArray("colony_location") instance=ExtResource("1_jnfrr")]
-position = Vector2(1400, 648)
-colony_location = NodePath("../../Colony")
-
-[node name="Body5" parent="Entities" node_paths=PackedStringArray("colony_location") instance=ExtResource("1_jnfrr")]
-position = Vector2(1400, 648)
-colony_location = NodePath("../../Colony")
-
-[node name="Body6" parent="Entities" node_paths=PackedStringArray("colony_location") instance=ExtResource("1_jnfrr")]
-position = Vector2(1400, 648)
-colony_location = NodePath("../../Colony")
-
-[node name="Body7" parent="Entities" node_paths=PackedStringArray("colony_location") instance=ExtResource("1_jnfrr")]
-position = Vector2(1400, 648)
+position = Vector2(1264, 808)
+rotation = 2.87979
 colony_location = NodePath("../../Colony")
 
 [node name="Consumables" type="Node2D" parent="."]
 
 [node name="Food" parent="Consumables" instance=ExtResource("2_drsd8")]
 position = Vector2(176, 808)
-scale = Vector2(0.1, 0.1)
 
 [node name="Food2" parent="Consumables" instance=ExtResource("2_drsd8")]
-position = Vector2(190, 400)
-scale = Vector2(0.1, 0.1)
+position = Vector2(208, 820)
 
 [node name="Food3" parent="Consumables" instance=ExtResource("2_drsd8")]
-position = Vector2(158, 784)
-scale = Vector2(0.1, 0.1)
+position = Vector2(176, 840)
 
 [node name="Food4" parent="Consumables" instance=ExtResource("2_drsd8")]
-position = Vector2(152, 802)
-scale = Vector2(0.1, 0.1)
+position = Vector2(208, 856)
 
 [node name="Food5" parent="Consumables" instance=ExtResource("2_drsd8")]
-position = Vector2(186, 774)
-scale = Vector2(0.1, 0.1)
+position = Vector2(176, 880)
 
 [node name="Food6" parent="Consumables" instance=ExtResource("2_drsd8")]
-position = Vector2(760, 936)
-scale = Vector2(0.1, 0.1)
+position = Vector2(152, 856)
 
 [node name="Food7" parent="Consumables" instance=ExtResource("2_drsd8")]
-position = Vector2(928, 144)
-scale = Vector2(0.1, 0.1)
+position = Vector2(152, 824)
 
 [node name="Food8" parent="Consumables" instance=ExtResource("2_drsd8")]
-position = Vector2(184, 344)
-scale = Vector2(0.1, 0.1)
+position = Vector2(176, 336)
 
 [node name="Food9" parent="Consumables" instance=ExtResource("2_drsd8")]
-position = Vector2(864, 160)
-scale = Vector2(0.1, 0.1)
+position = Vector2(208, 348)
 
 [node name="Food10" parent="Consumables" instance=ExtResource("2_drsd8")]
-position = Vector2(152, 752)
-scale = Vector2(0.1, 0.1)
-
-[node name="Food20" parent="Consumables" instance=ExtResource("2_drsd8")]
-position = Vector2(1600, 352)
-scale = Vector2(0.1, 0.1)
-
-[node name="Food21" parent="Consumables" instance=ExtResource("2_drsd8")]
-position = Vector2(1582, 328)
-scale = Vector2(0.1, 0.1)
-
-[node name="Food22" parent="Consumables" instance=ExtResource("2_drsd8")]
-position = Vector2(1576, 346)
-scale = Vector2(0.1, 0.1)
-
-[node name="Food23" parent="Consumables" instance=ExtResource("2_drsd8")]
-position = Vector2(1610, 318)
-scale = Vector2(0.1, 0.1)
-
-[node name="Food24" parent="Consumables" instance=ExtResource("2_drsd8")]
-position = Vector2(1576, 296)
-scale = Vector2(0.1, 0.1)
-
-[node name="Food25" parent="Consumables" instance=ExtResource("2_drsd8")]
-position = Vector2(1792, 960)
-scale = Vector2(0.1, 0.1)
-
-[node name="Food26" parent="Consumables" instance=ExtResource("2_drsd8")]
-position = Vector2(1774, 936)
-scale = Vector2(0.1, 0.1)
-
-[node name="Food27" parent="Consumables" instance=ExtResource("2_drsd8")]
-position = Vector2(1768, 954)
-scale = Vector2(0.1, 0.1)
-
-[node name="Food28" parent="Consumables" instance=ExtResource("2_drsd8")]
-position = Vector2(1802, 926)
-scale = Vector2(0.1, 0.1)
-
-[node name="Food29" parent="Consumables" instance=ExtResource("2_drsd8")]
-position = Vector2(1768, 904)
-scale = Vector2(0.1, 0.1)
+position = Vector2(176, 368)
 
 [node name="Food11" parent="Consumables" instance=ExtResource("2_drsd8")]
-position = Vector2(712, 942)
-scale = Vector2(0.1, 0.1)
+position = Vector2(208, 384)
 
 [node name="Food12" parent="Consumables" instance=ExtResource("2_drsd8")]
-position = Vector2(752, 890)
-scale = Vector2(0.1, 0.1)
+position = Vector2(176, 408)
 
 [node name="Food13" parent="Consumables" instance=ExtResource("2_drsd8")]
-position = Vector2(736, 920)
-scale = Vector2(0.1, 0.1)
+position = Vector2(152, 384)
 
 [node name="Food14" parent="Consumables" instance=ExtResource("2_drsd8")]
-position = Vector2(168, 376)
-scale = Vector2(0.1, 0.1)
+position = Vector2(152, 352)
 
 [node name="Food15" parent="Consumables" instance=ExtResource("2_drsd8")]
-position = Vector2(922, 106)
-scale = Vector2(0.1, 0.1)
+position = Vector2(1400, -320)
 
 [node name="Food16" parent="Consumables" instance=ExtResource("2_drsd8")]
-position = Vector2(890, 144)
-scale = Vector2(0.1, 0.1)
+position = Vector2(1432, -308)
 
 [node name="Food17" parent="Consumables" instance=ExtResource("2_drsd8")]
-position = Vector2(200, 368)
-scale = Vector2(0.1, 0.1)
+position = Vector2(1400, -288)
 
 [node name="Food18" parent="Consumables" instance=ExtResource("2_drsd8")]
-position = Vector2(712, 896)
-scale = Vector2(0.1, 0.1)
+position = Vector2(1432, -272)
 
 [node name="Food19" parent="Consumables" instance=ExtResource("2_drsd8")]
-position = Vector2(840, 112)
-scale = Vector2(0.1, 0.1)
+position = Vector2(1400, -248)
+
+[node name="Food20" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(1376, -272)
+
+[node name="Food21" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(1376, -304)
+
+[node name="Food22" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(2096, -168)
+
+[node name="Food23" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(2128, -156)
+
+[node name="Food24" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(2096, -136)
+
+[node name="Food25" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(2128, -120)
+
+[node name="Food26" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(2096, -96)
+
+[node name="Food27" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(2072, -120)
+
+[node name="Food28" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(2072, -152)
+
+[node name="Food29" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(1264, 1336)
+
+[node name="Food30" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(1296, 1348)
+
+[node name="Food31" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(1264, 1368)
+
+[node name="Food32" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(1296, 1384)
+
+[node name="Food33" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(1264, 1408)
+
+[node name="Food34" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(1240, 1384)
+
+[node name="Food35" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(1240, 1352)
+
+[node name="Food36" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(264, 1420)
+
+[node name="Food37" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(296, 1432)
+
+[node name="Food38" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(264, 1452)
+
+[node name="Food39" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(296, 1468)
+
+[node name="Food40" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(264, 1492)
+
+[node name="Food41" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(240, 1468)
+
+[node name="Food42" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(240, 1436)
+
+[node name="Food43" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(-112, 160)
+
+[node name="Food44" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(-80, 172)
+
+[node name="Food45" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(-112, 192)
+
+[node name="Food46" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(-80, 208)
+
+[node name="Food47" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(-112, 232)
+
+[node name="Food48" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(-136, 208)
+
+[node name="Food49" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(-136, 176)
+
+[node name="Food50" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(888, 128)
+
+[node name="Food51" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(920, 140)
+
+[node name="Food52" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(888, 160)
+
+[node name="Food53" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(920, 176)
+
+[node name="Food54" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(888, 200)
+
+[node name="Food55" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(864, 176)
+
+[node name="Food56" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(864, 144)
+
+[node name="Food57" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(128, -344)
+
+[node name="Food58" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(160, -332)
+
+[node name="Food59" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(128, -312)
+
+[node name="Food60" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(160, -296)
+
+[node name="Food61" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(128, -272)
+
+[node name="Food62" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(104, -296)
+
+[node name="Food63" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(104, -328)
+
+[node name="Food64" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(-320, -324)
+
+[node name="Food65" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(-288, -312)
+
+[node name="Food66" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(-320, -292)
+
+[node name="Food67" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(-288, -276)
+
+[node name="Food68" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(-320, -252)
+
+[node name="Food69" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(-344, -276)
+
+[node name="Food70" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(-344, -308)
+
+[node name="Food71" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(-496, 1072)
+
+[node name="Food72" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(-464, 1084)
+
+[node name="Food73" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(-496, 1104)
+
+[node name="Food74" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(-464, 1120)
+
+[node name="Food75" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(-496, 1144)
+
+[node name="Food76" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(-520, 1120)
+
+[node name="Food77" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(-520, 1088)
+
+[node name="Food78" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(2084, 608)
+
+[node name="Food79" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(2116, 620)
+
+[node name="Food80" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(2084, 640)
+
+[node name="Food81" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(2116, 656)
+
+[node name="Food82" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(2084, 680)
+
+[node name="Food83" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(2060, 656)
+
+[node name="Food84" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(2060, 624)
+
+[node name="Food85" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(2376, 1504)
+
+[node name="Food86" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(2408, 1516)
+
+[node name="Food87" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(2376, 1536)
+
+[node name="Food88" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(2408, 1552)
+
+[node name="Food89" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(2376, 1576)
+
+[node name="Food90" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(2352, 1552)
+
+[node name="Food91" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(2352, 1520)
+
+[node name="Food92" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(1160, 800)
+
+[node name="Food93" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(1192, 812)
+
+[node name="Food94" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(1160, 832)
+
+[node name="Food95" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(1192, 848)
+
+[node name="Food96" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(1160, 872)
+
+[node name="Food97" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(1136, 848)
+
+[node name="Food98" parent="Consumables" instance=ExtResource("2_drsd8")]
+position = Vector2(1136, 816)
 
 [node name="TileMap" type="TileMap" parent="."]
 tile_set = ExtResource("9_73tk6")

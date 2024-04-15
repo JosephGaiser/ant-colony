@@ -4,7 +4,6 @@
 [ext_resource type="Texture2D" uid="uid://ccjtox0pnp446" path="res://addons/kenney_input_prompts/Xbox Series/Double/xbox_button_color_x.png" id="1_vniex"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_votht"]
-friction = 0.7
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_fpn8m"]
 radius = 24.0673
