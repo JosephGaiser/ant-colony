@@ -3,45 +3,37 @@ extends RigidBody2D
 
 @export var value: int = 1
 @export var weight: float = 1.0
+@export var pickable_component: PickableComponent
 
-@onready var sprite = %Sprite2D
 @onready var collision: CollisionShape2D = %CollisionShape2D
 
-var held_by = null
 var collected: bool = false
-
-
-func _integrate_forces(state):
-	if held_by != null:
-		var t = state.get_transform()
-		var new_pos = held_by.global_position + Vector2(0, -20)
-		t.origin.x = new_pos.x
-		t.origin.y = new_pos.y
-		state.set_transform(t) 
+var collected_by: Colony = null
 
 
 func _ready():
 	mass = weight
 
 
-func pickup(picker_upper):
-	print("I was picked up by ", picker_upper)
+func set_collected(val: bool, collector: Colony) -> void:
+	collected = val
+	collected_by = collector
+
+
+func pickup(picker_upper: Node2D, offset: Vector2):
+	pickable_component.pickup(picker_upper, offset)
 	collision.set_deferred("disabled", true)
-	held_by = picker_upper
 
 
 func drop():
-	print("I was dropped", self)
-	#collision.set_deferred("disabled", false) TODO 
-	held_by = null
+	pickable_component.drop()
+	collision.set_deferred("disabled", false)
 
 
-func set_collected(value: bool) -> void:
-	collected = value
-
-
-func is_collected() -> bool:
-	return collected
+func is_collected_by_colony(colony: Colony) -> bool:
+	if colony == collected_by:
+		return true
+	return false
 
 
 func get_weight() -> float:
@@ -50,3 +42,7 @@ func get_weight() -> float:
 
 func get_value() -> int:
 	return value
+
+
+func _integrate_forces(state):
+	pickable_component.integrate_forces(state)

@@ -39,6 +39,7 @@ zoom_out={
 
 [physics]
 
+2d/physics_engine="GodotPhysics2D"
 2d/default_gravity_vector=Vector2(0, 0)
 
 [rendering]

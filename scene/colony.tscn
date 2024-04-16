@@ -1,0 +1,25 @@
+[gd_scene load_steps=4 format=3 uid="uid://bs737kq35lsyj"]
+
+[ext_resource type="Script" path="res://scene/colony.gd" id="1_0nafv"]
+[ext_resource type="Texture2D" uid="uid://drkr5c4pqo3b" path="res://addons/kenney_input_prompts/Generic/Double/generic_button_circle.png" id="1_duk5y"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ue4w1"]
+
+[node name="Colony" type="Marker2D"]
+script = ExtResource("1_0nafv")
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+scale = Vector2(17.6378, 17.6378)
+shape = SubResource("CircleShape2D_ue4w1")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.244562, 0.244562)
+texture = ExtResource("1_duk5y")
+
+[node name="FoodStorage" type="Marker2D" parent="."]
+unique_name_in_owner = true
+
+[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
+[connection signal="body_exited" from="Area2D" to="." method="_on_area_2d_body_exited"]
