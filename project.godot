@@ -37,6 +37,12 @@ zoom_out={
 ]
 }
 
+[layer_names]
+
+2d_physics/layer_1="ants"
+2d_physics/layer_2="food"
+2d_physics/layer_3="world"
+
 [physics]
 
 2d/physics_engine="GodotPhysics2D"

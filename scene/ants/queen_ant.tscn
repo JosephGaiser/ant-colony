@@ -1,41 +1,36 @@
-[gd_scene load_steps=8 format=3 uid="uid://d14pl1542hxm4"]
+[gd_scene load_steps=8 format=3 uid="uid://bl7lvmedgl855"]
 
-[ext_resource type="Script" path="res://scene/ants/ant.gd" id="1_3yx5a"]
-[ext_resource type="Texture2D" uid="uid://cdwqas426siee" path="res://addons/kenney_input_prompts/Xbox Series/Double/xbox_button_color_y.png" id="2_ovjn6"]
-[ext_resource type="PackedScene" uid="uid://cis6m2sus0kvh" path="res://components/health_component.tscn" id="3_gvhbr"]
-[ext_resource type="PackedScene" uid="uid://t4uyo56vutjx" path="res://components/hitbox_component.tscn" id="4_mibgo"]
+[ext_resource type="Script" path="res://scene/ants/queen_ant.gd" id="1_3eco0"]
+[ext_resource type="Texture2D" uid="uid://cm3w1eyrr8dwc" path="res://addons/kenney_input_prompts/Xbox Series/Double/xbox_button_color_a.png" id="2_asb3n"]
+[ext_resource type="PackedScene" uid="uid://cis6m2sus0kvh" path="res://components/health_component.tscn" id="3_32fw7"]
+[ext_resource type="PackedScene" uid="uid://t4uyo56vutjx" path="res://components/hitbox_component.tscn" id="4_y2cu8"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_6a7x7"]
-radius = 74.7
+radius = 65.43
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_mrwpu"]
-radius = 48.79
+radius = 49.65
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_qpmsm"]
-radius = 50.9902
+radius = 49.28
 
 [node name="Body" type="CharacterBody2D" groups=["ant"]]
 unique_name_in_owner = true
-scale = Vector2(0.2, 0.2)
-collision_mask = 7
+scale = Vector2(0.365, 0.365)
+collision_mask = 0
 motion_mode = 1
 wall_min_slide_angle = 0.0
-script = ExtResource("1_3yx5a")
-target_desired_distance = 75.0
-
-[node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
-unique_name_in_owner = true
-path_postprocessing = 1
-neighbor_distance = 100.0
-max_neighbors = 3
-debug_enabled = true
-debug_path_custom_color = Color(0.999999, 0.874714, 0.291287, 0.435294)
+script = ExtResource("1_3eco0")
+move_speed = 25.0
+carry_capacity = 5.0
+is_leader = true
+pickup_offset = Vector2(0, -100)
+random_walk_distance = 25.0
+metadata/_edit_lock_ = true
 
 [node name="Reach" type="Area2D" parent="."]
 unique_name_in_owner = true
 visible = false
-collision_mask = 2
-monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Reach"]
 shape = SubResource("CircleShape2D_6a7x7")
@@ -45,8 +40,6 @@ metadata/_edit_lock_ = true
 [node name="Vision" type="Area2D" parent="."]
 visible = false
 rotation = 1.57079
-collision_mask = 2
-monitorable = false
 metadata/_edit_lock_ = true
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Vision"]
@@ -55,22 +48,26 @@ metadata/_edit_lock_ = true
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 rotation = 1.57079
-texture = ExtResource("2_ovjn6")
+texture = ExtResource("2_asb3n")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_mrwpu")
 
-[node name="HealthComponent" parent="." instance=ExtResource("3_gvhbr")]
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+unique_name_in_owner = true
+path_postprocessing = 1
+neighbor_distance = 100.0
+max_neighbors = 3
 
-[node name="HitboxComponent" parent="." node_paths=PackedStringArray("health_component", "parent_body") instance=ExtResource("4_mibgo")]
-health_component = NodePath("../HealthComponent")
-parent_body = NodePath("..")
+[node name="HealthComponent" parent="." instance=ExtResource("3_32fw7")]
+
+[node name="HitboxComponent" parent="." instance=ExtResource("4_y2cu8")]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HitboxComponent"]
 shape = SubResource("CircleShape2D_qpmsm")
 debug_color = Color(0.894118, 0, 0, 0.337255)
 
-[connection signal="velocity_computed" from="NavigationAgent2D" to="." method="_on_navigation_agent_2d_velocity_computed"]
 [connection signal="area_shape_entered" from="Reach" to="." method="_on_reach_area_shape_entered"]
 [connection signal="body_entered" from="Reach" to="." method="_on_reach_body_entered"]
 [connection signal="body_entered" from="Vision" to="." method="_on_vision_body_entered"]
+[connection signal="velocity_computed" from="NavigationAgent2D" to="." method="_on_navigation_agent_2d_velocity_computed"]

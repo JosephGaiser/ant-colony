@@ -1,25 +1,61 @@
-[gd_scene load_steps=4 format=3 uid="uid://bs737kq35lsyj"]
+[gd_scene load_steps=6 format=3 uid="uid://bs737kq35lsyj"]
 
 [ext_resource type="Script" path="res://scene/colony.gd" id="1_0nafv"]
-[ext_resource type="Texture2D" uid="uid://drkr5c4pqo3b" path="res://addons/kenney_input_prompts/Generic/Double/generic_button_circle.png" id="1_duk5y"]
+[ext_resource type="Texture2D" uid="uid://dexofqrex8uuj" path="res://addons/kenney_input_prompts/Nintendo Wii/Double/wii_button_home_outline.png" id="2_1nhwd"]
+[ext_resource type="Texture2D" uid="uid://4ov2rwijybaf" path="res://addons/kenney_input_prompts/Generic/Double/generic_button_circle_outline.png" id="3_q8wq6"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_ue4w1"]
+radius = 113.69
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_jni0j"]
+radius = 64.0
 
 [node name="Colony" type="Marker2D"]
 script = ExtResource("1_0nafv")
 
 [node name="Area2D" type="Area2D" parent="."]
+collision_layer = 8
+collision_mask = 2
+metadata/_edit_lock_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
-scale = Vector2(17.6378, 17.6378)
 shape = SubResource("CircleShape2D_ue4w1")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-scale = Vector2(0.244562, 0.244562)
-texture = ExtResource("1_duk5y")
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("2_1nhwd")
+metadata/_edit_lock_ = true
 
-[node name="FoodStorage" type="Marker2D" parent="."]
+[node name="FoodStorageMarker" type="Marker2D" parent="."]
 unique_name_in_owner = true
+position = Vector2(-64, -64)
 
-[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
-[connection signal="body_exited" from="Area2D" to="." method="_on_area_2d_body_exited"]
+[node name="FoodStorage" type="Area2D" parent="FoodStorageMarker"]
+collision_layer = 8
+collision_mask = 3
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="FoodStorageMarker/FoodStorage"]
+shape = SubResource("CircleShape2D_jni0j")
+debug_color = Color(0.517647, 0.564706, 0.294118, 0.419608)
+
+[node name="Sprite2D" type="Sprite2D" parent="FoodStorageMarker"]
+modulate = Color(1, 1, 1, 0.168627)
+scale = Vector2(1.3642, 1.3642)
+texture = ExtResource("3_q8wq6")
+
+[node name="FoodStorageLabel" type="Label" parent="FoodStorageMarker"]
+unique_name_in_owner = true
+offset_right = 40.0
+offset_bottom = 23.0
+
+[node name="WasteStorageMarker" type="Marker2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(64, 64)
+
+[node name="SpawnLocationMarker" type="Marker2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(64, -64)
+
+[connection signal="body_entered" from="FoodStorageMarker/FoodStorage" to="." method="_on_food_storage_body_entered"]
+[connection signal="body_exited" from="FoodStorageMarker/FoodStorage" to="." method="_on_food_storage_body_exited"]

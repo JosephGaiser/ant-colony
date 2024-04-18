@@ -1,13 +1,14 @@
-class_name Ant
+class_name QueenAnt
 extends CharacterBody2D
 
 # Ant properties
 @export var colony: Colony
-@export var current_state: AntState = AntState.SEARCHING
+@export var current_state: AntState = AntState.DEFENDING_NEST
 @export var previous_state: AntState = AntState.IDLE
 @export var move_speed: float = 100.0
 @export var lerp_speed: float = 0.2
 @export var carry_capacity: float = 1.0
+@export var is_leader: bool = false
 @export var pickup_offset: Vector2 = Vector2(0, -20)
 # Random walk variables
 @export var random_walk_distance: float = 500.00
@@ -26,9 +27,7 @@ var inventory: Array[Food]               = []
 var known_food_locations: Array[Vector2] = []
 # Enum for Ant states
 enum AntState {
-	SEARCHING,
 	GOING_TO_TARGET,
-	CARRYING_FOOD,
 	RETURNING_TO_NEST,
 	DEFENDING_NEST,
 	IDLE,
@@ -62,16 +61,11 @@ func _physics_process(delta) -> void:
 	match current_state:
 		AntState.DEFENDING_NEST:
 			defend_nest(delta)
-		AntState.SEARCHING:
-			search_for_food(delta)
-		AntState.GOING_TO_TARGET:
-			go_to_target()
-		AntState.CARRYING_FOOD:
-			carry_food()
 		AntState.RETURNING_TO_NEST:
 			return_to_nest()
 		AntState.IDLE:
-			pass
+			if navigation_agent.is_navigation_finished():
+				random_walk()
 
 	if navigation_agent.is_navigation_finished():
 		return
@@ -94,23 +88,16 @@ func set_state(state: AntState) -> void:
 		return # Don't change state if it's the same
 	previous_state = current_state
 	current_state = state
+	print("State change: ", AntState.find_key(previous_state), " to ", AntState.find_key(current_state))
 
 
 func defend_nest(delta) -> void:
 	if colony == null:
-		set_state(AntState.SEARCHING)
+		set_state(AntState.IDLE)
 		return
 	if movement_target_position == colony.global_position:
 		return # Don't change target if we're already there
 	set_movement_target(colony.global_position)
-
-
-func search_for_food(_delta) -> void:
-	if !known_food_locations.is_empty(): # If we know about possible food locations, go to it
-		set_state(AntState.GOING_TO_TARGET)
-		return
-	if navigation_agent.is_navigation_finished():
-		random_walk()
 
 
 func random_walk():
@@ -122,98 +109,22 @@ func random_walk():
 	set_movement_target(target)
 
 
-func go_to_target() -> void:
-	if global_position.distance_to(movement_target_position) < 20:
-		known_food_locations.erase(movement_target_position)
-		set_state(AntState.SEARCHING)
-	if !known_food_locations.is_empty(): # If we know about possible food locations, go to it
-		var closest_food: Vector2 = known_food_locations[0]
-		for food_position in known_food_locations:
-			if global_position.distance_to(food_position) < global_position.distance_to(closest_food):
-				closest_food = food_position
-		set_movement_target(closest_food)
-		return
-	if !navigation_agent.is_target_reachable(): # If we can't reach the target, remove it from the list
-		known_food_locations.erase(movement_target_position)
-		set_state(AntState.SEARCHING)
-		return
-
-
-func carry_food():
-	if carry_weight >= carry_capacity:
-		set_state(AntState.RETURNING_TO_NEST)
-	else:
-		set_state(AntState.SEARCHING)
-
-
 func return_to_nest() -> void:
 	if colony == null:
-		set_state(AntState.IDLE)
+		set_state(AntState.IDLE) #TODO Esablish a new colony
 		return
-	set_movement_target(colony.get_storage_location())
+	set_movement_target(colony.get_spawn_location())
 	if navigation_agent.is_navigation_finished():
-		drop_all_food()
-		set_state(AntState.SEARCHING)
-
-
-# Food logic
-func pickup_food(food: Food) -> void:
-	known_food_locations.erase(food.global_position)
-	if food.is_held():
-		return
-	food.pickup(self, pickup_offset)
-	inventory.append(food)
-	carry_weight += food.get_weight()
-	set_state(AntState.CARRYING_FOOD)
-
-
-func drop_all_food() -> void:
-	for item in inventory:
-		if item is Food:
-			drop_food(item)
-
-
-func drop_food(food: Food) -> void:
-	inventory.erase(food)
-	carry_weight -= food.get_weight()
-	known_food_locations.erase(food.global_position)
-	food.drop()
-
-
-func deposit_food(deposit: Colony) -> void:
-	if colony == null:
-		drop_all_food()
-		return
-	if deposit != colony:
-		return # Dont deposit in other colonies
-	for item in inventory:
-		if item is Food:
-			inventory.erase(item)
-			carry_weight -= item.get_weight()
-			known_food_locations.erase(item.global_position)
-			deposit.deposit_food(item)
-
-
-func see_food(body):
-	if !known_food_locations.has(body.global_position):
-		known_food_locations.append(body.global_position)
+		set_state(AntState.IDLE)
 
 
 # Signals
 func _on_reach_body_entered(body) -> void:
-	if body is Food:
-		if body.is_collected_by_colony(colony):
-			return # no action needed
-		if carry_weight >= carry_capacity:
-			return
-		pickup_food(body)
+	pass
 
 
 func _on_vision_body_entered(body) -> void:
-	if body is Food:
-		if body.is_collected_by_colony(colony):
-			return # no action needed
-		see_food(body)
+	pass
 
 
 func _on_navigation_agent_2d_velocity_computed(safe_velocity):

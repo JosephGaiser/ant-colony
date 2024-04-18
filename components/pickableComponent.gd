@@ -10,14 +10,14 @@ var held_by         = null
 
 
 func pickup(picker_upper: Node2D, new_offset: Vector2):
-	print("I was picked up by ", picker_upper)
+	if !pickable:
+		return
 	held_by = picker_upper
 	pickable = false # disable the pickable node so it can't be picked up again
 	offset = new_offset
 
 
 func drop():
-	print("I was dropped by ", held_by)
 	held_by = null
 	pickable = true # enable the pickable node so it can be picked up again
 	offset = Vector2(0, 0)
@@ -25,9 +25,16 @@ func drop():
 
 func get_held_by():
 	return held_by
+	
+func is_held():
+	if held_by == null:
+		return false
+	return true
 
+func get_held_position():
+	return held_by.global_position + offset
 
-func integrate_forces(state) -> void:
+func integrate_forces(state: PhysicsDirectBodyState2D) -> void:
 	if held_by == null:
 		return
 	var t: Transform2D = state.get_transform()

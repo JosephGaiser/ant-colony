@@ -5,14 +5,8 @@ extends RigidBody2D
 @export var weight: float = 1.0
 @export var pickable_component: PickableComponent
 
-@onready var collision: CollisionShape2D = %CollisionShape2D
-
-var collected: bool = false
+var collected: bool      = false
 var collected_by: Colony = null
-
-
-func _ready():
-	mass = weight
 
 
 func set_collected(val: bool, collector: Colony) -> void:
@@ -20,14 +14,18 @@ func set_collected(val: bool, collector: Colony) -> void:
 	collected_by = collector
 
 
+func is_held() -> bool:
+	return pickable_component.is_held()
+
+
 func pickup(picker_upper: Node2D, offset: Vector2):
 	pickable_component.pickup(picker_upper, offset)
-	collision.set_deferred("disabled", true)
+	set_freeze_enabled(true)
 
 
 func drop():
 	pickable_component.drop()
-	collision.set_deferred("disabled", false)
+	set_freeze_enabled(false)
 
 
 func is_collected_by_colony(colony: Colony) -> bool:
@@ -44,5 +42,11 @@ func get_value() -> int:
 	return value
 
 
-func _integrate_forces(state):
-	pickable_component.integrate_forces(state)
+func deposit():
+	queue_free()
+
+
+func _process(delta):
+	# If the food is held, update its position to the picker upper's position
+	if pickable_component.is_held() && freeze == true:
+		position = pickable_component.get_held_position()
