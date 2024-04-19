@@ -9,6 +9,7 @@ extends CharacterBody2D
 @export var lerp_speed: float = 0.2
 @export var carry_capacity: float = 1.0
 @export var pickup_offset: Vector2 = Vector2(0, -20)
+@export var outline_component: OutlineComponent
 # Random walk variables
 @export var random_walk_distance: float = 500.00
 #Nav variables
@@ -24,9 +25,9 @@ var carry_weight: float                  = 0.0
 var current_angle: float                 = 0.0
 var inventory: Array[Food]               = []
 var known_food_locations: Array[Vector2] = []
-var last_position: Vector2 = Vector2()
-var stuck_timer: float = 0.0
-var stuck_threshold: float = 3.0  # The ant is considered stuck if it stays in the same position for 3 seconds
+var last_position: Vector2               = Vector2()
+var stuck_timer: float                   = 0.0
+var stuck_threshold: float               = 3.0  # The ant is considered stuck if it stays in the same position for 3 seconds
 # Enum for Ant states
 enum AntState {
 	SEARCHING,
@@ -39,6 +40,8 @@ enum AntState {
 
 
 func _ready():
+	if colony:
+		outline_component.set_line_color(colony.color)
 	# These values need to be adjusted for the actor's speed
 	# and the navigation layout.
 	navigation_agent.path_desired_distance = path_desired_distance
@@ -48,7 +51,7 @@ func _ready():
 	# Make sure to not await during _ready.
 	call_deferred("actor_setup")
 
-
+	
 func actor_setup():
 	# Wait for the first physics frame so the NavigationServer can sync.
 	await get_tree().physics_frame

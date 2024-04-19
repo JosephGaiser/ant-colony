@@ -1,9 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://d14pl1542hxm4"]
+[gd_scene load_steps=9 format=3 uid="uid://d14pl1542hxm4"]
 
 [ext_resource type="Script" path="res://scene/ants/ant.gd" id="1_3yx5a"]
 [ext_resource type="Texture2D" uid="uid://cdwqas426siee" path="res://addons/kenney_input_prompts/Xbox Series/Double/xbox_button_color_y.png" id="2_ovjn6"]
 [ext_resource type="PackedScene" uid="uid://cis6m2sus0kvh" path="res://components/health_component.tscn" id="3_gvhbr"]
 [ext_resource type="PackedScene" uid="uid://t4uyo56vutjx" path="res://components/hitbox_component.tscn" id="4_mibgo"]
+[ext_resource type="PackedScene" uid="uid://v5115d4bpn2k" path="res://components/outline_component.tscn" id="6_rov2g"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_6a7x7"]
 radius = 74.7
@@ -14,13 +15,14 @@ radius = 48.79
 [sub_resource type="CircleShape2D" id="CircleShape2D_qpmsm"]
 radius = 50.9902
 
-[node name="Body" type="CharacterBody2D" groups=["ant"]]
+[node name="Body" type="CharacterBody2D" node_paths=PackedStringArray("outline_component") groups=["ant"]]
 unique_name_in_owner = true
 scale = Vector2(0.2, 0.2)
 collision_mask = 7
 motion_mode = 1
 wall_min_slide_angle = 0.0
 script = ExtResource("1_3yx5a")
+outline_component = NodePath("OutlineComponent")
 target_desired_distance = 75.0
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
@@ -28,7 +30,6 @@ unique_name_in_owner = true
 path_postprocessing = 1
 neighbor_distance = 100.0
 max_neighbors = 3
-debug_enabled = true
 debug_path_custom_color = Color(0.999999, 0.874714, 0.291287, 0.435294)
 
 [node name="Reach" type="Area2D" parent="."]
@@ -63,12 +64,17 @@ shape = SubResource("CircleShape2D_mrwpu")
 [node name="HealthComponent" parent="." instance=ExtResource("3_gvhbr")]
 
 [node name="HitboxComponent" parent="." node_paths=PackedStringArray("health_component", "parent_body") instance=ExtResource("4_mibgo")]
+visible = false
 health_component = NodePath("../HealthComponent")
 parent_body = NodePath("..")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HitboxComponent"]
 shape = SubResource("CircleShape2D_qpmsm")
 debug_color = Color(0.894118, 0, 0, 0.337255)
+
+[node name="OutlineComponent" parent="." node_paths=PackedStringArray("sprite") instance=ExtResource("6_rov2g")]
+unique_name_in_owner = true
+sprite = NodePath("../Sprite2D")
 
 [connection signal="velocity_computed" from="NavigationAgent2D" to="." method="_on_navigation_agent_2d_velocity_computed"]
 [connection signal="area_shape_entered" from="Reach" to="." method="_on_reach_area_shape_entered"]

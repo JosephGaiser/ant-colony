@@ -1,9 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://bl7lvmedgl855"]
+[gd_scene load_steps=9 format=3 uid="uid://bl7lvmedgl855"]
 
 [ext_resource type="Script" path="res://scene/ants/queen_ant.gd" id="1_3eco0"]
 [ext_resource type="Texture2D" uid="uid://cm3w1eyrr8dwc" path="res://addons/kenney_input_prompts/Xbox Series/Double/xbox_button_color_a.png" id="2_asb3n"]
 [ext_resource type="PackedScene" uid="uid://cis6m2sus0kvh" path="res://components/health_component.tscn" id="3_32fw7"]
 [ext_resource type="PackedScene" uid="uid://t4uyo56vutjx" path="res://components/hitbox_component.tscn" id="4_y2cu8"]
+[ext_resource type="PackedScene" uid="uid://v5115d4bpn2k" path="res://components/outline_component.tscn" id="5_abcrd"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_6a7x7"]
 radius = 65.43
@@ -14,7 +15,7 @@ radius = 49.65
 [sub_resource type="CircleShape2D" id="CircleShape2D_qpmsm"]
 radius = 49.28
 
-[node name="Body" type="CharacterBody2D" groups=["ant"]]
+[node name="Body" type="CharacterBody2D" node_paths=PackedStringArray("outline_component") groups=["ant"]]
 unique_name_in_owner = true
 scale = Vector2(0.365, 0.365)
 collision_mask = 0
@@ -26,6 +27,7 @@ carry_capacity = 5.0
 is_leader = true
 pickup_offset = Vector2(0, -100)
 random_walk_distance = 25.0
+outline_component = NodePath("OutlineComponent")
 metadata/_edit_lock_ = true
 
 [node name="Reach" type="Area2D" parent="."]
@@ -66,6 +68,9 @@ max_neighbors = 3
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HitboxComponent"]
 shape = SubResource("CircleShape2D_qpmsm")
 debug_color = Color(0.894118, 0, 0, 0.337255)
+
+[node name="OutlineComponent" parent="." node_paths=PackedStringArray("sprite") instance=ExtResource("5_abcrd")]
+sprite = NodePath("../Sprite2D")
 
 [connection signal="area_shape_entered" from="Reach" to="." method="_on_reach_area_shape_entered"]
 [connection signal="body_entered" from="Reach" to="." method="_on_reach_body_entered"]

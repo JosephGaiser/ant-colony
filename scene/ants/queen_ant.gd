@@ -15,6 +15,7 @@ extends CharacterBody2D
 #Nav variables
 @export var path_desired_distance: float = 20 # How close must be to target location to consider "reached"
 @export var target_desired_distance: float = 50 # How far from target location csan be before recalc path
+@export var outline_component: OutlineComponent
 
 # References to other nodes
 @onready var navigation_agent: NavigationAgent2D = %NavigationAgent2D
@@ -35,6 +36,8 @@ enum AntState {
 
 
 func _ready():
+	if colony:
+		outline_component.set_line_color(colony.color)
 	# These values need to be adjusted for the actor's speed
 	# and the navigation layout.
 	navigation_agent.path_desired_distance = path_desired_distance

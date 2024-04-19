@@ -12,6 +12,7 @@ extends CharacterBody2D
 #Nav variables
 @export var path_desired_distance: float = 20 # How close must be to target location to consider "reached"
 @export var target_desired_distance: float = 50 # How far from target location csan be before recalc path
+@export var outline_component: OutlineComponent
 
 # References to other nodes
 @onready var navigation_agent: NavigationAgent2D = %NavigationAgent2D
@@ -19,7 +20,7 @@ extends CharacterBody2D
 
 # Internal variables
 var movement_target_position: Vector2 = Vector2(0.0, 0.0)
-var target_enemy: Ant
+var target_enemy: Node2D
 var current_angle: float              = 0.0
 var attack: Attack                    = Attack.new()
 # Enum for Ant states
@@ -33,6 +34,8 @@ enum AntState {
 
 
 func _ready():
+	if colony:
+		outline_component.set_line_color(colony.color)
 	# These values need to be adjusted for the actor's speed
 	# and the navigation layout.
 	navigation_agent.path_desired_distance = path_desired_distance
@@ -138,9 +141,10 @@ func defend_nest() -> void:
 	pass
 
 
-func see_enemy(ant: Ant) -> void:
-	if target_enemy == null:
-		target_enemy = ant # Set the first enemy seen as the target
+func see_enemy(body) -> void:
+	if body is Ant || SoldierAnt || QueenAnt:
+		if target_enemy == null:
+			target_enemy = body # Set the first enemy seen as the target
 	set_state(AntState.IN_COMBAT)
 
 
@@ -150,7 +154,7 @@ func lost_enemy(ant: Ant):
 
 
 func _on_vision_body_entered(body) -> void:
-	if body is Ant:
+	if body.is_in_group("ant"):
 		if body.colony == colony:
 			return # Ignore ants from the same colony
 		see_enemy(body)

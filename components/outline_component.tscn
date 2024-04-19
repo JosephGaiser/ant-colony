@@ -1,0 +1,8 @@
+[gd_scene load_steps=3 format=3 uid="uid://v5115d4bpn2k"]
+
+[ext_resource type="Script" path="res://components/outline_component.gd" id="1_0dyk5"]
+[ext_resource type="Material" uid="uid://dqyw2lyf0furj" path="res://assets/shaders/outline.tres" id="2_bn6wn"]
+
+[node name="OutlineComponent" type="Node"]
+script = ExtResource("1_0dyk5")
+material = ExtResource("2_bn6wn")

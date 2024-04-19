@@ -4,11 +4,12 @@ extends Marker2D
 @export var queen_scene: PackedScene
 @export var ant_scene: PackedScene
 @export var colony_size: int = 0
+@export var color: Color = Color.GOLDENROD
 
 @onready var food_storage: Marker2D = %FoodStorageMarker
 @onready var waste_storage: Marker2D = %WasteStorageMarker
 @onready var spawn_location: Marker2D = %SpawnLocationMarker
-@onready var food_storage_label = %FoodStorageLabel
+@onready var food_storage_label: Label = %FoodStorageLabel
 
 var food_storage_inventory: Array[Food] = []
 

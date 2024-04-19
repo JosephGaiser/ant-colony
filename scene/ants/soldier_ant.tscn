@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://b5avpntvw8ny6"]
+[gd_scene load_steps=12 format=3 uid="uid://b5avpntvw8ny6"]
 
 [ext_resource type="Script" path="res://scene/ants/soldier_ant.gd" id="1_ynhu8"]
 [ext_resource type="Texture2D" uid="uid://cwcbertxtwl8w" path="res://addons/kenney_input_prompts/Xbox Series/Double/xbox_button_color_b.png" id="2_dl2vi"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://t4uyo56vutjx" path="res://components/hitbox_component.tscn" id="3_5r5ae"]
 [ext_resource type="PackedScene" uid="uid://cw8fpra043ulj" path="res://components/attack_component.tscn" id="5_2k6ks"]
 [ext_resource type="Script" path="res://components/attack.gd" id="6_dxphb"]
+[ext_resource type="PackedScene" uid="uid://v5115d4bpn2k" path="res://components/outline_component.tscn" id="8_f4n6d"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_6a7x7"]
 radius = 74.7
@@ -19,7 +20,7 @@ radius = 45.19
 [sub_resource type="CircleShape2D" id="CircleShape2D_cm0yp"]
 radius = 32.01
 
-[node name="Soldier" type="CharacterBody2D" groups=["ant"]]
+[node name="Soldier" type="CharacterBody2D" node_paths=PackedStringArray("outline_component") groups=["ant"]]
 unique_name_in_owner = true
 scale = Vector2(0.2, 0.2)
 collision_mask = 7
@@ -28,13 +29,13 @@ wall_min_slide_angle = 0.0
 script = ExtResource("1_ynhu8")
 move_speed = 75.0
 patrol_range = 100.0
+outline_component = NodePath("OutlineComponent")
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
 unique_name_in_owner = true
 path_postprocessing = 1
 neighbor_distance = 100.0
 max_neighbors = 3
-debug_enabled = true
 
 [node name="Reach" type="Area2D" parent="."]
 unique_name_in_owner = true
@@ -76,6 +77,7 @@ shape = SubResource("CircleShape2D_qpmsm")
 debug_color = Color(0.894118, 0, 0, 0.337255)
 
 [node name="AttackComponent" parent="." node_paths=PackedStringArray("attack", "hitbox_shape", "parent_body") instance=ExtResource("5_2k6ks")]
+visible = false
 attack = NodePath("Attack")
 hitbox_shape = NodePath("AttackShape")
 parent_body = NodePath("..")
@@ -88,6 +90,10 @@ debug_color = Color(0.998452, 3.77345e-05, 0.711773, 0.42)
 [node name="Attack" type="Node" parent="AttackComponent"]
 script = ExtResource("6_dxphb")
 attack_damage = 5.0
+
+[node name="OutlineComponent" parent="." node_paths=PackedStringArray("sprite") instance=ExtResource("8_f4n6d")]
+unique_name_in_owner = true
+sprite = NodePath("../Sprite2D")
 
 [connection signal="velocity_computed" from="NavigationAgent2D" to="." method="_on_navigation_agent_2d_velocity_computed"]
 [connection signal="area_shape_entered" from="Reach" to="." method="_on_reach_area_shape_entered"]
