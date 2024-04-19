@@ -1,7 +1,7 @@
 [gd_scene load_steps=8 format=3 uid="uid://cjxfv25mejm0t"]
 
 [ext_resource type="Script" path="res://scene/ants/ant.gd" id="1_k8vmh"]
-[ext_resource type="Texture2D" uid="uid://cwcbertxtwl8w" path="res://addons/kenney_input_prompts/Xbox Series/Double/xbox_button_color_b.png" id="2_qadc0"]
+[ext_resource type="Texture2D" uid="uid://cdwqas426siee" path="res://addons/kenney_input_prompts/Xbox Series/Double/xbox_button_color_y.png" id="2_1qr7i"]
 [ext_resource type="PackedScene" uid="uid://cis6m2sus0kvh" path="res://components/health_component.tscn" id="3_a5wcl"]
 [ext_resource type="PackedScene" uid="uid://t4uyo56vutjx" path="res://components/hitbox_component.tscn" id="4_p3qd7"]
 
@@ -54,12 +54,13 @@ metadata/_edit_lock_ = true
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 rotation = 1.57079
-texture = ExtResource("2_qadc0")
+texture = ExtResource("2_1qr7i")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_mrwpu")
 
 [node name="HealthComponent" parent="." instance=ExtResource("3_a5wcl")]
+max_health = 20
 
 [node name="HitboxComponent" parent="." node_paths=PackedStringArray("health_component", "parent_body") instance=ExtResource("4_p3qd7")]
 visible = false

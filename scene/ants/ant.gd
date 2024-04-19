@@ -24,6 +24,9 @@ var carry_weight: float                  = 0.0
 var current_angle: float                 = 0.0
 var inventory: Array[Food]               = []
 var known_food_locations: Array[Vector2] = []
+var last_position: Vector2 = Vector2()
+var stuck_timer: float = 0.0
+var stuck_threshold: float = 3.0  # The ant is considered stuck if it stays in the same position for 3 seconds
 # Enum for Ant states
 enum AntState {
 	SEARCHING,
@@ -72,6 +75,16 @@ func _physics_process(delta) -> void:
 			return_to_nest()
 		AntState.IDLE:
 			pass
+
+	# CHECK IF WE HAVE BEEN STUCK IN IN THIS LOCATION FOR MORE THAN A FEW SECONDS
+
+	if global_position == last_position:
+		stuck_timer += delta
+		if stuck_timer > stuck_threshold:
+			random_walk()
+	else:
+		stuck_timer = 0.0
+		last_position = global_position
 
 	if navigation_agent.is_navigation_finished():
 		return

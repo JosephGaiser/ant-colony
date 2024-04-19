@@ -5,8 +5,9 @@ extends Node2D
 @export var parent_body: CharacterBody2D
 
 func is_friendly(colony: Colony) -> bool:
-	if parent_body.colony == colony:
-		return true
+	if parent_body:
+		if parent_body.colony == colony:
+			return true
 	return false
 	
 # Damage the entity if it has a health component

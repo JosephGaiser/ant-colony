@@ -103,7 +103,7 @@ position = Vector2(-400, 1072)
 position = Vector2(-512, 1000)
 
 [node name="Food11" parent="Foods" instance=ExtResource("2_drsd8")]
-position = Vector2(-384, 872)
+position = Vector2(-440, 1152)
 
 [node name="Food12" parent="Foods" instance=ExtResource("2_drsd8")]
 position = Vector2(256, 1400)
@@ -284,6 +284,21 @@ position = Vector2(32, -64)
 rotation = -1.309
 colony = NodePath("..")
 
+[node name="Soldier2" parent="Colony" node_paths=PackedStringArray("colony") instance=ExtResource("11_iyvt1")]
+position = Vector2(-19, -104)
+rotation = -1.309
+colony = NodePath("..")
+
+[node name="Soldier3" parent="Colony" node_paths=PackedStringArray("colony") instance=ExtResource("11_iyvt1")]
+position = Vector2(-8, -72)
+rotation = -1.309
+colony = NodePath("..")
+
+[node name="Soldier4" parent="Colony" node_paths=PackedStringArray("colony") instance=ExtResource("11_iyvt1")]
+position = Vector2(72, -48)
+rotation = -1.309
+colony = NodePath("..")
+
 [node name="Worker" parent="Colony" node_paths=PackedStringArray("colony") instance=ExtResource("1_jnfrr")]
 position = Vector2(-88, 4.76837e-07)
 colony = NodePath("..")
@@ -357,5 +372,89 @@ layer_0/tile_data = PackedInt32Array(3407956, 131072, 6, 3342420, 262144, 65539,
 [node name="Some Enemy" parent="." node_paths=PackedStringArray("colony") instance=ExtResource("6_mv7ur")]
 unique_name_in_owner = false
 position = Vector2(-552, 1032)
+rotation = -0.785397
+colony = NodePath("../Colony2")
+
+[node name="Some Enemy2" parent="." node_paths=PackedStringArray("colony") instance=ExtResource("6_mv7ur")]
+unique_name_in_owner = false
+position = Vector2(-585, 1025)
+rotation = -0.785397
+colony = NodePath("../Colony2")
+
+[node name="Some Enemy3" parent="." node_paths=PackedStringArray("colony") instance=ExtResource("6_mv7ur")]
+unique_name_in_owner = false
+position = Vector2(-627, 1025)
+rotation = -0.785397
+colony = NodePath("../Colony2")
+
+[node name="Some Enemy4" parent="." node_paths=PackedStringArray("colony") instance=ExtResource("6_mv7ur")]
+unique_name_in_owner = false
+position = Vector2(-608, 1000)
+rotation = -0.785397
+colony = NodePath("../Colony2")
+
+[node name="Some Enemy5" parent="." node_paths=PackedStringArray("colony") instance=ExtResource("6_mv7ur")]
+unique_name_in_owner = false
+position = Vector2(-560, 1000)
+rotation = -0.785397
+colony = NodePath("../Colony2")
+
+[node name="Some Enemy6" parent="." node_paths=PackedStringArray("colony") instance=ExtResource("6_mv7ur")]
+unique_name_in_owner = false
+position = Vector2(-520, 1032)
+rotation = -0.785397
+colony = NodePath("../Colony2")
+
+[node name="Some Enemy7" parent="." node_paths=PackedStringArray("colony") instance=ExtResource("6_mv7ur")]
+unique_name_in_owner = false
+position = Vector2(-680, 1008)
+rotation = -0.785397
+colony = NodePath("../Colony2")
+
+[node name="Some Enemy8" parent="." node_paths=PackedStringArray("colony") instance=ExtResource("6_mv7ur")]
+unique_name_in_owner = false
+position = Vector2(-720, 1048)
+rotation = -0.785397
+colony = NodePath("../Colony2")
+
+[node name="Some Enemy9" parent="." node_paths=PackedStringArray("colony") instance=ExtResource("6_mv7ur")]
+unique_name_in_owner = false
+position = Vector2(-744, 1120)
+rotation = -0.785397
+colony = NodePath("../Colony2")
+
+[node name="Some Enemy10" parent="." node_paths=PackedStringArray("colony") instance=ExtResource("6_mv7ur")]
+unique_name_in_owner = false
+position = Vector2(-776, 1208)
+rotation = -0.785397
+colony = NodePath("../Colony2")
+
+[node name="Some Enemy11" parent="." node_paths=PackedStringArray("colony") instance=ExtResource("6_mv7ur")]
+unique_name_in_owner = false
+position = Vector2(-696, 1264)
+rotation = -0.785397
+colony = NodePath("../Colony2")
+
+[node name="Some Enemy12" parent="." node_paths=PackedStringArray("colony") instance=ExtResource("6_mv7ur")]
+unique_name_in_owner = false
+position = Vector2(-712, 1320)
+rotation = -0.785397
+colony = NodePath("../Colony2")
+
+[node name="Some Enemy13" parent="." node_paths=PackedStringArray("colony") instance=ExtResource("6_mv7ur")]
+unique_name_in_owner = false
+position = Vector2(-656, 1336)
+rotation = -0.785397
+colony = NodePath("../Colony2")
+
+[node name="Some Enemy14" parent="." node_paths=PackedStringArray("colony") instance=ExtResource("6_mv7ur")]
+unique_name_in_owner = false
+position = Vector2(-568, 1320)
+rotation = -0.785397
+colony = NodePath("../Colony2")
+
+[node name="Some Enemy15" parent="." node_paths=PackedStringArray("colony") instance=ExtResource("6_mv7ur")]
+unique_name_in_owner = false
+position = Vector2(-568, 1320)
 rotation = -0.785397
 colony = NodePath("../Colony2")

@@ -8,6 +8,7 @@ extends CharacterBody2D
 @export var lerp_speed: float = 0.2
 # Random walk variables
 @export var patrol_range: float = 500.00
+@export var persuit_range: float = 800.00
 #Nav variables
 @export var path_desired_distance: float = 20 # How close must be to target location to consider "reached"
 @export var target_desired_distance: float = 50 # How far from target location csan be before recalc path
@@ -118,6 +119,10 @@ func return_to_nest() -> void:
 
 
 func combat() -> void:
+	if global_position.distance_to(colony.global_position) > persuit_range:
+		target_enemy = null
+		set_state(AntState.RETURNING_TO_NEST)
+		return
 	if target_enemy == null:
 		var bodies: Array[Node2D] = vision.get_overlapping_bodies()
 		if bodies.is_empty():
