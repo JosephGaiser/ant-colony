@@ -1,6 +1,8 @@
-[gd_resource type="TileSet" load_steps=47 format=3 uid="uid://hy5fdq83hlqi"]
+[gd_resource type="TileSet" load_steps=48 format=3 uid="uid://hy5fdq83hlqi"]
 
 [ext_resource type="Texture2D" uid="uid://oybpjxlnsh62" path="res://assets/simple_tileset/spritesheet.png" id="1_vvxwr"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_ripyn"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_7y6ob"]
 source_geometry_group_name = &"navigation_polygon_source_group"
@@ -710,7 +712,8 @@ texture_region_size = Vector2i(32, 32)
 [resource]
 tile_size = Vector2i(32, 32)
 physics_layer_0/collision_layer = 4
-physics_layer_0/collision_mask = 3
+physics_layer_0/collision_mask = 7
+physics_layer_0/physics_material = SubResource("PhysicsMaterial_ripyn")
 terrain_set_0/mode = 0
 terrain_set_0/terrain_0/name = "Main"
 terrain_set_0/terrain_0/color = Color(0.501961, 0.345098, 0.25098, 1)

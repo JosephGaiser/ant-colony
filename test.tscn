@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://bisp3t30kv460"]
+
+[ext_resource type="PackedScene" uid="uid://bs737kq35lsyj" path="res://scene/colony.tscn" id="1_vk5jv"]
+
+[node name="Node2D" type="Node2D"]
+
+[node name="Colony" parent="." instance=ExtResource("1_vk5jv")]
+position = Vector2(616, 352)

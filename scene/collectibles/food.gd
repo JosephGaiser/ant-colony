@@ -46,6 +46,9 @@ func deposit():
 	queue_free()
 
 
+func consumed_by(consumer):
+	queue_free()
+
 func _process(delta):
 	# If the food is held, update its position to the picker upper's position
 	if pickable_component.is_held() && freeze == true:

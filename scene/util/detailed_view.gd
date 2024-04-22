@@ -1,18 +1,10 @@
 class_name DetailedView
 extends Control
 
-@export var parent: Node = null
+@export var parent: Node
 @onready var details: VBoxContainer = %Details
 
-
-func _ready():
-	if parent == null:
-		if get_parent() != null:
-			if get_parent().has_method("get_details"):
-				parent = get_parent()
-
-func _process(delta: float) -> void:
-	position = parent.global_position + Vector2(12,12)
+func _process(_delta: float) -> void:
 	var props: Array[Dictionary] = parent.get_details()
 	for property in props:
 		if property['value'] == null:

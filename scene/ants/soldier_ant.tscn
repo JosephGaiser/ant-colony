@@ -1,8 +1,8 @@
 [gd_scene load_steps=12 format=3 uid="uid://b5avpntvw8ny6"]
 
 [ext_resource type="Script" path="res://scene/ants/soldier_ant.gd" id="1_ynhu8"]
-[ext_resource type="Texture2D" uid="uid://cwcbertxtwl8w" path="res://addons/kenney_input_prompts/Xbox Series/Double/xbox_button_color_b.png" id="2_dl2vi"]
 [ext_resource type="PackedScene" uid="uid://cis6m2sus0kvh" path="res://components/health_component.tscn" id="2_fbeis"]
+[ext_resource type="Texture2D" uid="uid://bicbemqy4th4v" path="res://addons/kenney_input_prompts/Nintendo Switch/Double/switch_button_minus_outline.png" id="2_vb1dm"]
 [ext_resource type="PackedScene" uid="uid://t4uyo56vutjx" path="res://components/hitbox_component.tscn" id="3_5r5ae"]
 [ext_resource type="PackedScene" uid="uid://cw8fpra043ulj" path="res://components/attack_component.tscn" id="5_2k6ks"]
 [ext_resource type="Script" path="res://components/attack.gd" id="6_dxphb"]
@@ -50,6 +50,7 @@ metadata/_edit_lock_ = true
 
 [node name="Vision" type="Area2D" parent="."]
 unique_name_in_owner = true
+visible = false
 rotation = 1.57079
 monitorable = false
 metadata/_edit_lock_ = true
@@ -60,15 +61,17 @@ metadata/_edit_lock_ = true
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 rotation = 1.57079
-texture = ExtResource("2_dl2vi")
+texture = ExtResource("2_vb1dm")
 
 [node name="SoldierShape" type="CollisionShape2D" parent="."]
 visible = false
 shape = SubResource("CircleShape2D_mrwpu")
 
 [node name="HealthComponent" parent="." instance=ExtResource("2_fbeis")]
+visible = false
 
 [node name="HitboxComponent" parent="." node_paths=PackedStringArray("health_component", "parent_body") instance=ExtResource("3_5r5ae")]
+visible = false
 health_component = NodePath("../HealthComponent")
 parent_body = NodePath("..")
 

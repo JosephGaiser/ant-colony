@@ -9,7 +9,11 @@ extends CharacterBody2D
 @export var lerp_speed: float = 0.2
 @export var carry_capacity: float = 1.0
 @export var pickup_offset: Vector2 = Vector2(0, -20)
+
+#Components
 @export var outline_component: OutlineComponent
+@export var hunger_component: HungerComponent
+
 # Random walk variables
 @export var random_walk_distance: float = 500.00
 #Nav variables
@@ -18,6 +22,7 @@ extends CharacterBody2D
 
 # References to other nodes
 @onready var navigation_agent: NavigationAgent2D = %NavigationAgent2D
+@onready var line_of_sight: RayCast2D = %LineOfSight
 
 # Internal variables
 var movement_target_position: Vector2    = Vector2(0.0, 0.0)
@@ -36,6 +41,7 @@ enum AntState {
 	RETURNING_TO_NEST,
 	DEFENDING_NEST,
 	IDLE,
+	HUNGRY,
 }
 
 
@@ -64,7 +70,7 @@ func set_movement_target(movement_target: Vector2):
 	navigation_agent.target_position = movement_target
 
 
-func _physics_process(delta) -> void:
+func _physics_process(delta) -> void:	
 	match current_state:
 		AntState.DEFENDING_NEST:
 			defend_nest(delta)
@@ -76,6 +82,8 @@ func _physics_process(delta) -> void:
 			carry_food()
 		AntState.RETURNING_TO_NEST:
 			return_to_nest()
+		AntState.HUNGRY:
+			hungry()
 		AntState.IDLE:
 			pass
 
@@ -111,6 +119,14 @@ func set_state(state: AntState) -> void:
 	previous_state = current_state
 	current_state = state
 
+func hungry():
+	set_movement_target(colony.get_storage_location())
+	if navigation_agent.is_navigation_finished():
+		if hunger_component.is_hungry():
+			hunger_component.eat(colony.withdraw_food())
+		else:
+			set_state(AntState.SEARCHING)
+	
 
 func defend_nest(delta) -> void:
 	if colony == null:
@@ -249,3 +265,7 @@ func get_details() -> Array[Dictionary]:
 		{"name": "Seen Food", "value": str(known_food_locations)},
 		{"name": "Random Walk Distance", "value": str(random_walk_distance)},
 	]
+
+
+func _on_hungar_component_hungry(current_sasiation: float):
+	set_state(AntState.HUNGRY)

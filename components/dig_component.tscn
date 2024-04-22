@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://don1nkjgbdgxp"]
+
+[ext_resource type="Script" path="res://components/dig_component.gd" id="1_ge6sx"]
+
+[node name="DigComponent" type="Node2D"]
+script = ExtResource("1_ge6sx")

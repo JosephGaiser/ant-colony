@@ -3,7 +3,7 @@ extends Node
 
 @export var sprite: Sprite2D
 @export var line_color: Color = Color.AQUA
-@export var line_thickness: float =  5.0
+@export var line_thickness: float =  40.0
 @export var material: ShaderMaterial
 
 var material_dupe: ShaderMaterial

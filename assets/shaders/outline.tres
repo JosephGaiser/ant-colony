@@ -4,5 +4,8 @@
 
 [resource]
 shader = ExtResource("1_4g4xg")
-shader_parameter/line_color = Color(1, 1, 1, 1)
-shader_parameter/line_thickness = 1.0
+shader_parameter/Smooth = true
+shader_parameter/line_width = 28.805
+shader_parameter/line_color = Color(0, 1, 1, 1)
+shader_parameter/pixel_size = 5
+shader_parameter/width_speed = 1.355

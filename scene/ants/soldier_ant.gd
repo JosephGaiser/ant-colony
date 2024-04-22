@@ -102,7 +102,6 @@ func random_patrol():
 func set_state(state: AntState) -> void:
 	if state == current_state:
 		return # Don't change state if it's the same
-	print("new state", state, "last state", previous_state)
 	previous_state = current_state
 	current_state = state
 
@@ -134,7 +133,8 @@ func combat() -> void:
 		for body in bodies:
 			if body is Ant:
 				target_enemy = body
-	set_movement_target(target_enemy.global_position)
+	if target_enemy:
+		set_movement_target(target_enemy.global_position)
 
 
 func defend_nest() -> void:

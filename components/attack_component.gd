@@ -17,14 +17,12 @@ func _ready():
 
 
 func _on_attack_timer_timeout():
-	print("timout!", self)
 	if target:
 		do_attack(target)
 
 
 
 func do_attack(hitbox: HitboxComponent):
-	print("spanking a hitbox ", hitbox)
 	hitbox.damage(attack)
 	attack_timer.start()
 

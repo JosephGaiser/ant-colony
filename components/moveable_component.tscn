@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://dfix35twbo7co"]
+
+[ext_resource type="Script" path="res://scene/MoveableComponent.gd" id="1_pl34y"]
+
+[node name="MoveableComponent" type="Area2D"]
+script = ExtResource("1_pl34y")
+
+[connection signal="input_event" from="." to="." method="_on_input_event"]
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]

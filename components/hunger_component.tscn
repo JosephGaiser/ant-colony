@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://cs0683fmy0evk"]
+
+[ext_resource type="Script" path="res://components/hunger_component.gd" id="1_sip63"]
+
+[node name="HungerComponent" type="Node2D"]
+script = ExtResource("1_sip63")
+
+[node name="HungerTimer" type="Timer" parent="."]
+autostart = true
+
+[connection signal="timeout" from="HungerTimer" to="." method="_on_hungar_timer_timeout"]
