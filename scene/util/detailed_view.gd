@@ -4,6 +4,7 @@ extends Control
 @export var parent: Node
 @onready var details: VBoxContainer = %Details
 
+
 func _process(_delta: float) -> void:
 	var props: Array[Dictionary] = parent.get_details()
 	for property in props:

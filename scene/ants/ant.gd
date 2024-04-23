@@ -16,9 +16,6 @@ extends CharacterBody2D
 
 # Random walk variables
 @export var random_walk_distance: float = 500.00
-#Nav variables
-@export var path_desired_distance: float = 20 # How close must be to target location to consider "reached"
-@export var target_desired_distance: float = 50 # How far from target location csan be before recalc path
 
 # References to other nodes
 @onready var navigation_agent: NavigationAgent2D = %NavigationAgent2D
@@ -50,8 +47,6 @@ func _ready():
 		outline_component.set_line_color(colony.color)
 	# These values need to be adjusted for the actor's speed
 	# and the navigation layout.
-	navigation_agent.path_desired_distance = path_desired_distance
-	navigation_agent.target_desired_distance = target_desired_distance
 	navigation_agent.avoidance_enabled = true
 
 	# Make sure to not await during _ready.
@@ -103,7 +98,7 @@ func _physics_process(delta) -> void:
 	var direction_to_move: Vector2  = global_position.direction_to(next_path_position)
 	#    var new_velocity: Vector2  = lerp(velocity, direction_to_move * move_speed, lerp_speed)
 	var new_velocity: Vector2 = direction_to_move * move_speed
-	rotation = lerp(rotation, direction_to_move.angle(), lerp_speed)
+	rotation = lerp_angle(rotation, direction_to_move.angle(), lerp_speed)
 	if navigation_agent.avoidance_enabled:
 		# Avoidance is enabled, so we need to set the velocity through the navigation agent.
 		navigation_agent.set_velocity(new_velocity)
@@ -123,7 +118,11 @@ func hungry():
 	set_movement_target(colony.get_storage_location())
 	if navigation_agent.is_navigation_finished():
 		if hunger_component.is_hungry():
-			hunger_component.eat(colony.withdraw_food())
+			var food = colony.withdraw_food()
+			if food:
+				hunger_component.eat(food)
+			else:
+				set_state(AntState.SEARCHING)
 		else:
 			set_state(AntState.SEARCHING)
 	
@@ -158,16 +157,17 @@ func go_to_target() -> void:
 	if global_position.distance_to(movement_target_position) < 20:
 		known_food_locations.erase(movement_target_position)
 		set_state(AntState.SEARCHING)
+	if !navigation_agent.is_target_reachable(): # If we can't reach the target, remove it from the list
+		known_food_locations.erase(movement_target_position)
+		set_movement_target(colony.get_waste_location()) # TODO Massive perf issues if we dont just change to a random different target
+		set_state(AntState.SEARCHING)
+		return
 	if !known_food_locations.is_empty(): # If we know about possible food locations, go to it
 		var closest_food: Vector2 = known_food_locations[0]
 		for food_position in known_food_locations:
 			if global_position.distance_to(food_position) < global_position.distance_to(closest_food):
 				closest_food = food_position
 		set_movement_target(closest_food)
-		return
-	if !navigation_agent.is_target_reachable(): # If we can't reach the target, remove it from the list
-		known_food_locations.erase(movement_target_position)
-		set_state(AntState.SEARCHING)
 		return
 
 
@@ -256,16 +256,12 @@ func _on_navigation_agent_2d_velocity_computed(safe_velocity):
 # Used for detailed information about the ant in the UI
 func get_details() -> Array[Dictionary]:
 	return [
-		{"name": "Current State", "value": AntState.find_key(current_state)},
-		{"name": "Position", "value": str(global_position)},
-		{"name": "Velocity", "value": str(velocity)},
-		{"name": "Rotation", "value": str(rotation)},
-		{"name": "Carry Weight", "value": str(carry_weight)},
+		{"name": "State", "value": AntState.find_key(current_state)},
 		{"name": "Inventory", "value": str(inventory)},
-		{"name": "Seen Food", "value": str(known_food_locations)},
-		{"name": "Random Walk Distance", "value": str(random_walk_distance)},
+		{"name": "Hungry", "value": str(hunger_component.is_hungry())},
+		{"name": "Hunger", "value": str(hunger_component.get_sasiation())},
 	]
 
 
-func _on_hungar_component_hungry(current_sasiation: float):
+func _on_hungar_component_hungry(current_sasiation: float): #TODO Typo lol
 	set_state(AntState.HUNGRY)

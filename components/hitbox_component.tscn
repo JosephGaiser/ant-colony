@@ -1,6 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://t4uyo56vutjx"]
+[gd_scene load_steps=3 format=3 uid="uid://t4uyo56vutjx"]
 
 [ext_resource type="Script" path="res://components/hitboxComponent.gd" id="1_3irbj"]
+[ext_resource type="Material" uid="uid://oljsegyxv2i0" path="res://assets/shaders/flash.tres" id="2_ptgyc"]
 
 [node name="HitboxComponent" type="Area2D"]
 script = ExtResource("1_3irbj")
+damage_shader = ExtResource("2_ptgyc")

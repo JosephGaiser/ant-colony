@@ -1,11 +1,14 @@
-[gd_scene load_steps=10 format=3 uid="uid://bl7lvmedgl855"]
+[gd_scene load_steps=15 format=3 uid="uid://bl7lvmedgl855"]
 
 [ext_resource type="Script" path="res://scene/ants/queen_ant.gd" id="1_3eco0"]
 [ext_resource type="Material" uid="uid://dqyw2lyf0furj" path="res://assets/shaders/outline.tres" id="2_6hpxt"]
+[ext_resource type="PackedScene" uid="uid://d14pl1542hxm4" path="res://scene/ants/ant.tscn" id="2_ldp4p"]
+[ext_resource type="PackedScene" uid="uid://b5avpntvw8ny6" path="res://scene/ants/soldier_ant.tscn" id="3_03nct"]
 [ext_resource type="PackedScene" uid="uid://cis6m2sus0kvh" path="res://components/health_component.tscn" id="3_32fw7"]
 [ext_resource type="Texture2D" uid="uid://olt3fg7dm8k0" path="res://addons/kenney_input_prompts/Nintendo Switch/Double/switch_button_a_outline.png" id="3_x2ot7"]
 [ext_resource type="PackedScene" uid="uid://t4uyo56vutjx" path="res://components/hitbox_component.tscn" id="4_y2cu8"]
 [ext_resource type="PackedScene" uid="uid://v5115d4bpn2k" path="res://components/outline_component.tscn" id="5_abcrd"]
+[ext_resource type="PackedScene" uid="uid://cs0683fmy0evk" path="res://components/hunger_component.tscn" id="7_yma63"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_6a7x7"]
 radius = 65.43
@@ -16,7 +19,16 @@ radius = 49.65
 [sub_resource type="CircleShape2D" id="CircleShape2D_qpmsm"]
 radius = 49.28
 
-[node name="Body" type="CharacterBody2D" node_paths=PackedStringArray("outline_component") groups=["ant"]]
+[sub_resource type="Gradient" id="Gradient_7m1w4"]
+offsets = PackedFloat32Array(0, 0.0607143, 0.314286, 0.671429)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1, 0.410853, 0.410853, 0.410853, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_qr1sx"]
+gradient = SubResource("Gradient_7m1w4")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+
+[node name="Queen" type="CharacterBody2D" node_paths=PackedStringArray("outline_component") groups=["ant"]]
 unique_name_in_owner = true
 scale = Vector2(0.33, 0.33)
 collision_mask = 0
@@ -26,6 +38,8 @@ script = ExtResource("1_3eco0")
 carry_capacity = 5.0
 is_leader = true
 pickup_offset = Vector2(0, -100)
+worker_scene = ExtResource("2_ldp4p")
+soldier_scene = ExtResource("3_03nct")
 random_walk_distance = 25.0
 outline_component = NodePath("OutlineComponent")
 metadata/_edit_lock_ = true
@@ -66,8 +80,11 @@ max_neighbors = 3
 [node name="HealthComponent" parent="." instance=ExtResource("3_32fw7")]
 visible = false
 
-[node name="HitboxComponent" parent="." instance=ExtResource("4_y2cu8")]
+[node name="HitboxComponent" parent="." node_paths=PackedStringArray("health_component", "parent_body", "parent_sprite") instance=ExtResource("4_y2cu8")]
 visible = false
+health_component = NodePath("../HealthComponent")
+parent_body = NodePath("..")
+parent_sprite = NodePath("../Sprite2D")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HitboxComponent"]
 shape = SubResource("CircleShape2D_qpmsm")
@@ -75,6 +92,14 @@ debug_color = Color(0.894118, 0, 0, 0.337255)
 
 [node name="OutlineComponent" parent="." node_paths=PackedStringArray("sprite") instance=ExtResource("5_abcrd")]
 sprite = NodePath("../Sprite2D")
+
+[node name="PointLight2D" type="PointLight2D" parent="."]
+texture = SubResource("GradientTexture2D_qr1sx")
+texture_scale = 26.07
+
+[node name="HungerComponent" parent="." node_paths=PackedStringArray("health_component") instance=ExtResource("7_yma63")]
+unique_name_in_owner = true
+health_component = NodePath("../HealthComponent")
 
 [connection signal="area_shape_entered" from="Reach" to="." method="_on_reach_area_shape_entered"]
 [connection signal="body_entered" from="Reach" to="." method="_on_reach_body_entered"]

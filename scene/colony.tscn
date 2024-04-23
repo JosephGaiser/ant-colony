@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://bs737kq35lsyj"]
+[gd_scene load_steps=14 format=3 uid="uid://bs737kq35lsyj"]
 
 [ext_resource type="Script" path="res://scene/colony.gd" id="1_0nafv"]
 [ext_resource type="Texture2D" uid="uid://dexofqrex8uuj" path="res://addons/kenney_input_prompts/Nintendo Wii/Double/wii_button_home_outline.png" id="2_1nhwd"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://d14pl1542hxm4" path="res://scene/ants/ant.tscn" id="3_fpbgw"]
 [ext_resource type="Texture2D" uid="uid://4ov2rwijybaf" path="res://addons/kenney_input_prompts/Generic/Double/generic_button_circle_outline.png" id="3_q8wq6"]
 [ext_resource type="Script" path="res://scene/food_storage_marker.gd" id="3_qebjy"]
+[ext_resource type="PackedScene" uid="uid://b5avpntvw8ny6" path="res://scene/ants/soldier_ant.tscn" id="4_1edkn"]
 [ext_resource type="PackedScene" uid="uid://w4xxbxn7iwb2" path="res://scene/util/detailed_view.tscn" id="4_aqvwj"]
 [ext_resource type="Script" path="res://components/outline_component.gd" id="5_66g5m"]
 [ext_resource type="Material" uid="uid://dqyw2lyf0furj" path="res://assets/shaders/outline.tres" id="6_lqtl7"]
@@ -21,6 +22,7 @@ radius = 16.49
 script = ExtResource("1_0nafv")
 queen_scene = ExtResource("2_3qaq5")
 worker_scene = ExtResource("3_fpbgw")
+soldier_scene = ExtResource("4_1edkn")
 outline_component = NodePath("OutlineComponent")
 
 [node name="Icon" type="Sprite2D" parent="."]

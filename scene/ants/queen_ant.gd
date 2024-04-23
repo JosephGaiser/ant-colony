@@ -1,6 +1,8 @@
 class_name QueenAnt
 extends CharacterBody2D
 
+signal queen_is_hungry(queen: QueenAnt)
+
 # Ant properties
 @export var colony: Colony
 @export var current_state: AntState = AntState.RETURNING_TO_NEST
@@ -10,6 +12,9 @@ extends CharacterBody2D
 @export var carry_capacity: float = 1.0
 @export var is_leader: bool = false
 @export var pickup_offset: Vector2 = Vector2(0, -20)
+@export var worker_scene: PackedScene
+@export var soldier_scene: PackedScene
+
 # Random walk variables
 @export var random_walk_distance: float = 50.00
 #Nav variables
@@ -19,6 +24,7 @@ extends CharacterBody2D
 
 # References to other nodes
 @onready var navigation_agent: NavigationAgent2D = %NavigationAgent2D
+@onready var hunger_component = %HungerComponent
 
 # Internal variables
 var movement_target_position: Vector2    = Vector2(0.0, 0.0)
@@ -26,6 +32,7 @@ var carry_weight: float                  = 0.0
 var current_angle: float                 = 0.0
 var inventory: Array[Food]               = []
 var known_food_locations: Array[Vector2] = []
+var spawn_timer: Timer
 # Enum for Ant states
 enum AntState {
 	RETURNING_TO_NEST,
@@ -37,6 +44,14 @@ enum AntState {
 func _ready():
 	if colony:
 		outline_component.set_line_color(colony.color)
+
+	# Setup spawning timer
+	spawn_timer = Timer.new()
+	spawn_timer.set_wait_time(10)
+	spawn_timer.autostart = true
+	spawn_timer.timeout.connect(_on_spawn_timer_timeout)
+	add_child(spawn_timer)
+
 	# These values need to be adjusted for the actor's speed
 	# and the navigation layout.
 	navigation_agent.path_desired_distance = path_desired_distance
@@ -64,7 +79,7 @@ func _physics_process(delta) -> void:
 		AntState.RETURNING_TO_NEST:
 			return_to_nest()
 		AntState.SPAWNING_ANTS:
-			pass #TODO Impl
+			spawning()
 		AntState.IDLE:
 			if navigation_agent.is_navigation_finished():
 				random_walk()
@@ -90,13 +105,17 @@ func set_state(state: AntState) -> void:
 	previous_state = current_state
 	current_state = state
 
+func spawning():
+	if hunger_component.is_hungry():
+		queen_is_hungry.emit(self)
+	set_movement_target(colony.spawn_location.global_position)
 
 func random_walk():
 	var angle_range: float      = 45.0
 	var distance_range: Vector2 = Vector2(50.00, random_walk_distance)
 	current_angle += randf_range(-angle_range, angle_range)
 	var distance: float         = randf_range(distance_range.x, distance_range.y)
-	var target: Vector2         = colony.global_position + Vector2(cos(current_angle), sin(current_angle)) * distance
+	var target: Vector2         = colony.spawn_location.global_position + Vector2(cos(current_angle), sin(current_angle)) * distance
 	set_movement_target(target)
 
 
@@ -105,7 +124,7 @@ func return_to_nest() -> void:
 		set_state(AntState.IDLE) #TODO Esablish a new colony?
 		return
 	if navigation_agent.is_navigation_finished():
-		set_state(AntState.IDLE)
+		set_state(AntState.SPAWNING_ANTS)
 		return
 	set_movement_target(colony.get_spawn_location())
 
@@ -122,6 +141,13 @@ func _on_vision_body_entered(body) -> void:
 func _on_navigation_agent_2d_velocity_computed(safe_velocity):
 	velocity = safe_velocity
 	move_and_slide()
+
+
+func _on_spawn_timer_timeout():
+	print("Spawn timer timeout")
+	if current_state == AntState.SPAWNING_ANTS:
+		colony.spawn_ant(worker_scene)
+		hunger_component.burn_hunger(10.0)
 
 
 # Used for detailed information about the ant in the UI

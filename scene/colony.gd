@@ -3,6 +3,7 @@ extends Node2D
 
 @export var queen_scene: PackedScene
 @export var worker_scene: PackedScene
+@export var soldier_scene: PackedScene
 @export var colony_size: int = 0
 @export var color: Color = Color.GOLDENROD
 @export var colony_name: String = "default"
@@ -22,7 +23,9 @@ var food_storage_inventory: Array[Food] = []
 func _ready():
 	outline_component.set_line_color(color)
 	spawn_ant(queen_scene)
-	for i in colony_size:
+	spawn_ant(soldier_scene)
+	spawn_ant(soldier_scene)	
+	for i in colony_size - 1:
 		spawn_ant(worker_scene)
 
 func get_storage_location() -> Vector2:

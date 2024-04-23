@@ -33,6 +33,10 @@ func eat(food: Food) -> float:
 	return get_sasiation()
 
 
+func burn_hunger(amount: float) -> float:
+	current_sasiation -= amount
+	return get_sasiation()
+
 # Current Sasiation %
 func get_sasiation() -> float:
 	return current_sasiation / max_sasitation

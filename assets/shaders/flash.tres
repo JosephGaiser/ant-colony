@@ -1,0 +1,8 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://oljsegyxv2i0"]
+
+[ext_resource type="Shader" path="res://assets/shaders/hitbox_shader.gdshader" id="1_253a0"]
+
+[resource]
+shader = ExtResource("1_253a0")
+shader_parameter/active = true
+shader_parameter/flash_color = Color(1, 0, 0, 1)

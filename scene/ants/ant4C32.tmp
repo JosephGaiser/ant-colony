@@ -1,6 +1,7 @@
-[gd_scene load_steps=13 format=3 uid="uid://d14pl1542hxm4"]
+[gd_scene load_steps=12 format=3 uid="uid://d14pl1542hxm4"]
 
 [ext_resource type="Script" path="res://scene/ants/ant.gd" id="1_3yx5a"]
+[ext_resource type="Material" uid="uid://dqyw2lyf0furj" path="res://assets/shaders/outline.tres" id="2_k07qn"]
 [ext_resource type="PackedScene" uid="uid://cis6m2sus0kvh" path="res://components/health_component.tscn" id="3_gvhbr"]
 [ext_resource type="Texture2D" uid="uid://o8retb2huaf3" path="res://addons/kenney_input_prompts/Nintendo Switch/Double/switch_button_y_outline.png" id="3_hdyp1"]
 [ext_resource type="PackedScene" uid="uid://t4uyo56vutjx" path="res://components/hitbox_component.tscn" id="4_mibgo"]
@@ -9,7 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://cs0683fmy0evk" path="res://components/hunger_component.tscn" id="8_208r1"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_6a7x7"]
-radius = 16.69
+radius = 5.72
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_mrwpu"]
 radius = 9.69
@@ -17,40 +18,29 @@ radius = 9.69
 [sub_resource type="CircleShape2D" id="CircleShape2D_qpmsm"]
 radius = 9.84
 
-[sub_resource type="Gradient" id="Gradient_wnm0c"]
-offsets = PackedFloat32Array(0, 0.0607143, 0.314286, 0.671429)
-colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1, 0.410853, 0.410853, 0.410853, 1, 0, 0, 0, 1)
-
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_2c5eu"]
-gradient = SubResource("Gradient_wnm0c")
-fill = 1
-fill_from = Vector2(0.5, 0.5)
-
 [node name="Worker" type="CharacterBody2D" node_paths=PackedStringArray("outline_component", "hunger_component") groups=["ant"]]
 unique_name_in_owner = true
 collision_mask = 7
 motion_mode = 1
 wall_min_slide_angle = 0.0
 script = ExtResource("1_3yx5a")
-pickup_offset = Vector2(0, -22)
 outline_component = NodePath("OutlineComponent")
 hunger_component = NodePath("HungarComponent")
-metadata/_edit_vertical_guides_ = [10.0, 20.0, -20.0]
-metadata/_edit_horizontal_guides_ = [-20.0, 20.0]
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
 unique_name_in_owner = true
-target_desired_distance = 15.0
 path_postprocessing = 1
-avoidance_enabled = true
-radius = 11.0
+neighbor_distance = 100.0
+max_neighbors = 3
 
 [node name="Reach" type="Area2D" parent="."]
 unique_name_in_owner = true
+visible = false
 collision_mask = 2
 monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Reach"]
+position = Vector2(16.195, 0)
 shape = SubResource("CircleShape2D_6a7x7")
 debug_color = Color(0.0901961, 0.654902, 0.462745, 0.419608)
 metadata/_edit_lock_ = true
@@ -66,11 +56,13 @@ polygon = PackedVector2Array(0, 0, -47.999, -152, 48.001, -152)
 metadata/_edit_lock_ = true
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
+material = ExtResource("2_k07qn")
 rotation = 1.57079
 scale = Vector2(0.2, 0.2)
 texture = ExtResource("3_hdyp1")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
 shape = SubResource("CircleShape2D_mrwpu")
 
 [node name="OutlineComponent" parent="." node_paths=PackedStringArray("sprite") instance=ExtResource("6_rov2g")]
@@ -79,49 +71,25 @@ sprite = NodePath("../Sprite2D")
 line_thickness = 30.0
 
 [node name="HealthComponent" parent="." instance=ExtResource("3_gvhbr")]
-visible = false
 
-[node name="HitboxComponent" parent="." node_paths=PackedStringArray("health_component", "parent_body", "parent_sprite") instance=ExtResource("4_mibgo")]
-visible = false
+[node name="HitboxComponent" parent="." node_paths=PackedStringArray("health_component", "parent_body") instance=ExtResource("4_mibgo")]
 health_component = NodePath("../HealthComponent")
 parent_body = NodePath("..")
-parent_sprite = NodePath("../Sprite2D")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HitboxComponent"]
 shape = SubResource("CircleShape2D_qpmsm")
 debug_color = Color(0.894118, 0, 0, 0.337255)
 
-[node name="DigComponent" parent="." node_paths=PackedStringArray("line_of_sight1", "line_of_sight2", "line_of_sight3") instance=ExtResource("7_t8mda")]
-line_of_sight1 = NodePath("LineOfSight")
-line_of_sight2 = NodePath("LineOfSight2")
-line_of_sight3 = NodePath("LineOfSight3")
+[node name="DigComponent" parent="." node_paths=PackedStringArray("line_of_sight") instance=ExtResource("7_t8mda")]
+line_of_sight = NodePath("LineOfSight")
 
 [node name="LineOfSight" type="RayCast2D" parent="DigComponent"]
 unique_name_in_owner = true
-target_position = Vector2(28, 0)
-collision_mask = 4
-
-[node name="LineOfSight2" type="RayCast2D" parent="DigComponent"]
-unique_name_in_owner = true
-rotation = -0.546189
-target_position = Vector2(24.6637, 5.63035)
-collision_mask = 4
-
-[node name="LineOfSight3" type="RayCast2D" parent="DigComponent"]
-unique_name_in_owner = true
-rotation = 0.604317
-target_position = Vector2(24.295, -7.05369)
+target_position = Vector2(22, 0)
 collision_mask = 4
 
 [node name="HungarComponent" parent="." node_paths=PackedStringArray("health_component") instance=ExtResource("8_208r1")]
-visible = false
 health_component = NodePath("../HealthComponent")
-hunger_tick_length = 10.0
-sasiation_threshold = 0.25
-
-[node name="PointLight2D" type="PointLight2D" parent="."]
-texture = SubResource("GradientTexture2D_2c5eu")
-texture_scale = 6.0
 
 [connection signal="velocity_computed" from="NavigationAgent2D" to="." method="_on_navigation_agent_2d_velocity_computed"]
 [connection signal="area_shape_entered" from="Reach" to="." method="_on_reach_area_shape_entered"]

@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://b5avpntvw8ny6"]
+[gd_scene load_steps=14 format=3 uid="uid://b5avpntvw8ny6"]
 
 [ext_resource type="Script" path="res://scene/ants/soldier_ant.gd" id="1_ynhu8"]
 [ext_resource type="PackedScene" uid="uid://cis6m2sus0kvh" path="res://components/health_component.tscn" id="2_fbeis"]
@@ -19,6 +19,15 @@ radius = 45.19
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_cm0yp"]
 radius = 32.01
+
+[sub_resource type="Gradient" id="Gradient_gtktp"]
+offsets = PackedFloat32Array(0, 0.0607143, 0.314286, 0.671429)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1, 0.410853, 0.410853, 0.410853, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_3ae4u"]
+gradient = SubResource("Gradient_gtktp")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
 
 [node name="Soldier" type="CharacterBody2D" node_paths=PackedStringArray("outline_component") groups=["ant"]]
 unique_name_in_owner = true
@@ -70,10 +79,11 @@ shape = SubResource("CircleShape2D_mrwpu")
 [node name="HealthComponent" parent="." instance=ExtResource("2_fbeis")]
 visible = false
 
-[node name="HitboxComponent" parent="." node_paths=PackedStringArray("health_component", "parent_body") instance=ExtResource("3_5r5ae")]
+[node name="HitboxComponent" parent="." node_paths=PackedStringArray("health_component", "parent_body", "parent_sprite") instance=ExtResource("3_5r5ae")]
 visible = false
 health_component = NodePath("../HealthComponent")
 parent_body = NodePath("..")
+parent_sprite = NodePath("../Sprite2D")
 
 [node name="HitboxShape" type="CollisionShape2D" parent="HitboxComponent"]
 shape = SubResource("CircleShape2D_qpmsm")
@@ -97,6 +107,10 @@ attack_damage = 5.0
 [node name="OutlineComponent" parent="." node_paths=PackedStringArray("sprite") instance=ExtResource("8_f4n6d")]
 unique_name_in_owner = true
 sprite = NodePath("../Sprite2D")
+
+[node name="PointLight2D" type="PointLight2D" parent="."]
+texture = SubResource("GradientTexture2D_3ae4u")
+texture_scale = 6.0
 
 [connection signal="velocity_computed" from="NavigationAgent2D" to="." method="_on_navigation_agent_2d_velocity_computed"]
 [connection signal="area_shape_entered" from="Reach" to="." method="_on_reach_area_shape_entered"]
