@@ -37,7 +37,7 @@ motion_mode = 1
 wall_min_slide_angle = 0.0
 script = ExtResource("1_ynhu8")
 move_speed = 75.0
-patrol_range = 100.0
+patrol_range = 200.0
 outline_component = NodePath("OutlineComponent")
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
@@ -102,7 +102,10 @@ debug_color = Color(0.998452, 3.77345e-05, 0.711773, 0.42)
 
 [node name="Attack" type="Node" parent="AttackComponent"]
 script = ExtResource("6_dxphb")
-attack_damage = 5.0
+attack_damage = 25.0
+knockback_force = 300.0
+attack_position = Vector2(1, 1)
+cooldown = 1.0
 
 [node name="OutlineComponent" parent="." node_paths=PackedStringArray("sprite") instance=ExtResource("8_f4n6d")]
 unique_name_in_owner = true

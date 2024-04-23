@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://bl7lvmedgl855"]
+[gd_scene load_steps=16 format=3 uid="uid://bl7lvmedgl855"]
 
 [ext_resource type="Script" path="res://scene/ants/queen_ant.gd" id="1_3eco0"]
 [ext_resource type="Material" uid="uid://dqyw2lyf0furj" path="res://assets/shaders/outline.tres" id="2_6hpxt"]
@@ -9,9 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://t4uyo56vutjx" path="res://components/hitbox_component.tscn" id="4_y2cu8"]
 [ext_resource type="PackedScene" uid="uid://v5115d4bpn2k" path="res://components/outline_component.tscn" id="5_abcrd"]
 [ext_resource type="PackedScene" uid="uid://cs0683fmy0evk" path="res://components/hunger_component.tscn" id="7_yma63"]
-
-[sub_resource type="CircleShape2D" id="CircleShape2D_6a7x7"]
-radius = 65.43
+[ext_resource type="PackedScene" uid="uid://w4xxbxn7iwb2" path="res://scene/util/detailed_view.tscn" id="10_ojqtf"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_mrwpu"]
 radius = 49.65
@@ -28,6 +26,9 @@ gradient = SubResource("Gradient_7m1w4")
 fill = 1
 fill_from = Vector2(0.5, 0.5)
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_6a7x7"]
+radius = 65.43
+
 [node name="Queen" type="CharacterBody2D" node_paths=PackedStringArray("outline_component") groups=["ant"]]
 unique_name_in_owner = true
 scale = Vector2(0.33, 0.33)
@@ -42,15 +43,6 @@ worker_scene = ExtResource("2_ldp4p")
 soldier_scene = ExtResource("3_03nct")
 random_walk_distance = 25.0
 outline_component = NodePath("OutlineComponent")
-metadata/_edit_lock_ = true
-
-[node name="Reach" type="Area2D" parent="."]
-unique_name_in_owner = true
-visible = false
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Reach"]
-shape = SubResource("CircleShape2D_6a7x7")
-debug_color = Color(0.0901961, 0.654902, 0.462745, 0.419608)
 metadata/_edit_lock_ = true
 
 [node name="Vision" type="Area2D" parent="."]
@@ -100,8 +92,22 @@ texture_scale = 26.07
 [node name="HungerComponent" parent="." node_paths=PackedStringArray("health_component") instance=ExtResource("7_yma63")]
 unique_name_in_owner = true
 health_component = NodePath("../HealthComponent")
+hunger_tick_length = 1.0
+rate_of_depleation = 1.5
 
-[connection signal="area_shape_entered" from="Reach" to="." method="_on_reach_area_shape_entered"]
-[connection signal="body_entered" from="Reach" to="." method="_on_reach_body_entered"]
+[node name="Reach" type="Area2D" parent="."]
+unique_name_in_owner = true
+visible = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Reach"]
+shape = SubResource("CircleShape2D_6a7x7")
+debug_color = Color(0.0901961, 0.654902, 0.462745, 0.419608)
+metadata/_edit_lock_ = true
+
+[node name="DetailedView" parent="." node_paths=PackedStringArray("parent") instance=ExtResource("10_ojqtf")]
+parent = NodePath("..")
+
 [connection signal="body_entered" from="Vision" to="." method="_on_vision_body_entered"]
 [connection signal="velocity_computed" from="NavigationAgent2D" to="." method="_on_navigation_agent_2d_velocity_computed"]
+[connection signal="area_shape_entered" from="Reach" to="." method="_on_reach_area_shape_entered"]
+[connection signal="body_entered" from="Reach" to="." method="_on_reach_body_entered"]

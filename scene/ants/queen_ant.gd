@@ -153,12 +153,6 @@ func _on_spawn_timer_timeout():
 # Used for detailed information about the ant in the UI
 func get_details() -> Array[Dictionary]:
 	return [
-		{"name": "Current State", "value": AntState.find_key(current_state)},
-		{"name": "Position", "value": str(global_position)},
-		{"name": "Velocity", "value": str(velocity)},
-		{"name": "Rotation", "value": str(rotation)},
-		{"name": "Carry Weight", "value": str(carry_weight)},
-		{"name": "Inventory", "value": str(inventory)},
-		{"name": "Seen Food", "value": str(known_food_locations)},
-		{"name": "Random Walk Distance", "value": str(random_walk_distance)},
+		{"name": "State", "value": AntState.find_key(current_state)},
+		{"name": "hunger", "value": str(hunger_component.get_sasiation())}
 	]

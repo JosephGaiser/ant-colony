@@ -285,11 +285,11 @@ position = Vector2(1456, -168)
 
 [node name="YellowColony" parent="." instance=ExtResource("2_034sc")]
 position = Vector2(1610, -237)
-colony_size = 10
+colony_size = 2
 colony_name = "yellow"
 
 [node name="BlueColony" parent="." instance=ExtResource("2_034sc")]
 position = Vector2(37, -13)
-colony_size = 10
+colony_size = 2
 color = Color(4.62055e-06, 0.768599, 0.861255, 1)
 colony_name = "blue"

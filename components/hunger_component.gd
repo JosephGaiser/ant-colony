@@ -39,6 +39,8 @@ func burn_hunger(amount: float) -> float:
 
 # Current Sasiation %
 func get_sasiation() -> float:
+	if current_sasiation <= 0:
+		return 0.0
 	return current_sasiation / max_sasitation
 
 
