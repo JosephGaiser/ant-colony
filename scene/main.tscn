@@ -15,7 +15,7 @@ tonemap_mode = 3
 glow_enabled = true
 glow_normalized = true
 glow_intensity = 1.05
-glow_bloom = 0.14
+glow_bloom = 0.09
 glow_blend_mode = 0
 
 [sub_resource type="Resource" id="Resource_p52oy"]

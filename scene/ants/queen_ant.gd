@@ -144,7 +144,6 @@ func _on_navigation_agent_2d_velocity_computed(safe_velocity):
 
 
 func _on_spawn_timer_timeout():
-	print("Spawn timer timeout")
 	if current_state == AntState.SPAWNING_ANTS:
 		colony.spawn_ant(worker_scene)
 		hunger_component.burn_hunger(10.0)

@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://bs737kq35lsyj"]
+[gd_scene load_steps=16 format=3 uid="uid://bs737kq35lsyj"]
 
 [ext_resource type="Script" path="res://scene/colony.gd" id="1_0nafv"]
 [ext_resource type="Texture2D" uid="uid://dexofqrex8uuj" path="res://addons/kenney_input_prompts/Nintendo Wii/Double/wii_button_home_outline.png" id="2_1nhwd"]
@@ -11,6 +11,15 @@
 [ext_resource type="PackedScene" uid="uid://w4xxbxn7iwb2" path="res://scene/util/detailed_view.tscn" id="4_aqvwj"]
 [ext_resource type="Script" path="res://components/outline_component.gd" id="5_66g5m"]
 [ext_resource type="Material" uid="uid://dqyw2lyf0furj" path="res://assets/shaders/outline.tres" id="6_lqtl7"]
+
+[sub_resource type="Gradient" id="Gradient_wnm0c"]
+offsets = PackedFloat32Array(0, 0.0607143, 0.314286, 0.671429)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1, 0.410853, 0.410853, 0.410853, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_jt5cv"]
+gradient = SubResource("Gradient_wnm0c")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_jni0j"]
 radius = 42.02
@@ -42,6 +51,10 @@ position = Vector2(-64, -64)
 script = ExtResource("3_qebjy")
 colony = NodePath("..")
 
+[node name="PointLight2D" type="PointLight2D" parent="FoodStorageMarker"]
+texture = SubResource("GradientTexture2D_jt5cv")
+texture_scale = 6.0
+
 [node name="FoodStorageArea" type="Area2D" parent="FoodStorageMarker"]
 collision_layer = 8
 collision_mask = 3
@@ -54,7 +67,6 @@ debug_color = Color(0.517647, 0.564706, 0.294118, 0.419608)
 
 [node name="MoveableComponent" parent="FoodStorageMarker" node_paths=PackedStringArray("moveable_entity") instance=ExtResource("2_vv7bb")]
 moveable_entity = NodePath("..")
-debug = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="FoodStorageMarker/MoveableComponent"]
 shape = SubResource("CircleShape2D_17s0y")
@@ -77,15 +89,31 @@ unique_name_in_owner = true
 position = Vector2(64, -64)
 scale = Vector2(0.538348, 0.910275)
 
+[node name="PointLight2D" type="PointLight2D" parent="WasteStorageMarker"]
+texture = SubResource("GradientTexture2D_jt5cv")
+texture_scale = 6.0
+
 [node name="Sprite2D3" type="Sprite2D" parent="WasteStorageMarker"]
 modulate = Color(1, 1, 1, 0.168627)
 self_modulate = Color(1, 0, 0, 1)
 scale = Vector2(2.18484, 1.29214)
 texture = ExtResource("3_q8wq6")
 
+[node name="MoveableComponent2" parent="WasteStorageMarker" node_paths=PackedStringArray("moveable_entity") instance=ExtResource("2_vv7bb")]
+scale = Vector2(1.85753, 1.09857)
+moveable_entity = NodePath("..")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WasteStorageMarker/MoveableComponent2"]
+shape = SubResource("CircleShape2D_17s0y")
+debug_color = Color(0.832314, 0.00137538, 0.94025, 0.42)
+
 [node name="SpawnLocationMarker" type="Marker2D" parent="."]
 unique_name_in_owner = true
 position = Vector2(64, 64)
+
+[node name="PointLight2D" type="PointLight2D" parent="SpawnLocationMarker"]
+texture = SubResource("GradientTexture2D_jt5cv")
+texture_scale = 6.0
 
 [node name="Sprite2D2" type="Sprite2D" parent="SpawnLocationMarker"]
 modulate = Color(1, 1, 1, 0.168627)
@@ -93,6 +121,13 @@ self_modulate = Color(1, 0, 1, 1)
 position = Vector2(-4.54747e-13, 0)
 scale = Vector2(1.15007, 1.15284)
 texture = ExtResource("3_q8wq6")
+
+[node name="MoveableComponent3" parent="SpawnLocationMarker" node_paths=PackedStringArray("moveable_entity") instance=ExtResource("2_vv7bb")]
+moveable_entity = NodePath("..")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SpawnLocationMarker/MoveableComponent3"]
+shape = SubResource("CircleShape2D_17s0y")
+debug_color = Color(0.832314, 0.00137538, 0.94025, 0.42)
 
 [node name="DetailedView" parent="." node_paths=PackedStringArray("parent") instance=ExtResource("4_aqvwj")]
 offset_left = 144.0
