@@ -117,7 +117,7 @@ func set_state(state: AntState) -> void:
 func hungry():
 	set_movement_target(colony.get_storage_location())
 	if navigation_agent.is_navigation_finished():
-		if hunger_component.is_hungry():
+		if hunger_component.get_sasiation() < .8:
 			var food = colony.withdraw_food()
 			if food:
 				hunger_component.eat(food)

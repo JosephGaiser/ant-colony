@@ -37,6 +37,7 @@ var spawn_timer: Timer
 enum AntState {
 	RETURNING_TO_NEST,
 	SPAWNING_ANTS,
+	HUNGRY,
 	IDLE,
 }
 
@@ -80,6 +81,8 @@ func _physics_process(delta) -> void:
 			return_to_nest()
 		AntState.SPAWNING_ANTS:
 			spawning()
+		AntState.HUNGRY:
+			hungry()
 		AntState.IDLE:
 			if navigation_agent.is_navigation_finished():
 				random_walk()
@@ -105,10 +108,25 @@ func set_state(state: AntState) -> void:
 	previous_state = current_state
 	current_state = state
 
+func hungry():
+	set_movement_target(colony.get_storage_location())
+	if navigation_agent.is_navigation_finished():
+		if hunger_component.get_sasiation() < .8:
+			var food = colony.withdraw_food()
+			if food:
+				hunger_component.eat(food)
+			else:
+				set_state(AntState.SPAWNING_ANTS)
+		else:
+			set_state(AntState.SPAWNING_ANTS)
+
 func spawning():
+	if navigation_agent.is_navigation_finished():
+		random_walk()
 	if hunger_component.is_hungry():
-		queen_is_hungry.emit(self)
+		queen_is_hungry.emit(self) #TODO The queen should have food brought to her
 	set_movement_target(colony.spawn_location.global_position)
+
 
 func random_walk():
 	var angle_range: float      = 45.0
@@ -155,3 +173,7 @@ func get_details() -> Array[Dictionary]:
 		{"name": "State", "value": AntState.find_key(current_state)},
 		{"name": "hunger", "value": str(hunger_component.get_sasiation())}
 	]
+
+
+func _on_hunger_component_hungry(sasiation):
+	set_state(AntState.HUNGRY)

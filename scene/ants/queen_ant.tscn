@@ -89,8 +89,7 @@ visible = false
 [node name="HungerComponent" parent="." node_paths=PackedStringArray("health_component") instance=ExtResource("7_yma63")]
 unique_name_in_owner = true
 health_component = NodePath("../HealthComponent")
-hunger_tick_length = 1.0
-rate_of_depleation = 1.5
+sasiation_threshold = 0.25
 
 [node name="HitboxComponent" parent="." node_paths=PackedStringArray("health_component", "parent_body", "parent_sprite") instance=ExtResource("4_y2cu8")]
 visible = false
@@ -115,3 +114,4 @@ parent = NodePath("..")
 [connection signal="area_shape_entered" from="Reach" to="." method="_on_reach_area_shape_entered"]
 [connection signal="body_entered" from="Reach" to="." method="_on_reach_body_entered"]
 [connection signal="velocity_computed" from="NavigationAgent2D" to="." method="_on_navigation_agent_2d_velocity_computed"]
+[connection signal="hungry" from="HungerComponent" to="." method="_on_hunger_component_hungry"]

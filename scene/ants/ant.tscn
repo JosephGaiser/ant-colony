@@ -102,7 +102,6 @@ collision_mask = 4
 [node name="HungarComponent" parent="." node_paths=PackedStringArray("health_component") instance=ExtResource("8_208r1")]
 visible = false
 health_component = NodePath("../HealthComponent")
-hunger_tick_length = 10.0
 sasiation_threshold = 0.25
 
 [node name="PointLight2D" type="PointLight2D" parent="."]

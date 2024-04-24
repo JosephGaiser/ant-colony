@@ -1,7 +1,7 @@
 class_name Food
 extends RigidBody2D
 
-@export var value: int = 1
+@export var value: int = 10
 @export var weight: float = 1.0
 @export var pickable_component: PickableComponent
 
